@@ -93,7 +93,99 @@ button:hover {
     margin-top: 20px;
     font-size: 1.2em;
 }
+#kaartContainer {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 25px auto;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 10px 25px rgba(0, 31, 77, 0.25);
+}
 
+#nederlandKaart {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+#kaartMarkering {
+    position: absolute;
+    width: 34px;
+    height: 34px;
+    transform: translate(-50%, -50%);
+    border: 5px solid white;
+    border-radius: 50%;
+    background-color: #ff6b00;
+    box-shadow:
+        0 0 0 5px rgba(255, 107, 0, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.5);
+    animation: kaartPuls 1.2s infinite;
+    pointer-events: none;
+}
+
+@keyframes kaartPuls {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+#kaartAntwoorden {
+    margin-top: 20px;
+}
+
+#kaartFeedback {
+    min-height: 35px;
+    margin: 20px 0;
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+#kaartScore {
+    margin: 20px 0;
+    font-size: 1.1em;
+}
+
+.secondary-button {
+    background: linear-gradient(
+        135deg,
+        #334155,
+        #475569
+    );
+}
+
+.secondary-button:hover {
+    background: linear-gradient(
+        135deg,
+        #475569,
+        #64748b
+    );
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    .quiz-box {
+        padding: 20px;
+    }
+
+    #kaartMarkering {
+        width: 25px;
+        height: 25px;
+        border-width: 3px;
+    }
+}
 </style>
 
 </head>
@@ -107,6 +199,10 @@ button:hover {
 
     <button onclick="startQuiz('provincies')">
         Provincies & Hoofdsteden
+    </button>
+
+    <button onclick="startKaartQuiz()">
+        Kaart van Nederland
     </button>
 
     <button onclick="startQuiz('steden')">
@@ -147,7 +243,50 @@ button:hover {
     </button>
 
 </div>
+<div id="kaartQuiz" class="quiz-box" style="display:none;">
 
+    <h1>🗺️ Kaart van Nederland</h1>
+
+    <p id="kaartInstructie">
+        Welke provincie wordt aangegeven?
+    </p>
+
+    <div id="kaartContainer">
+        <img
+            src="kaart-nederland.jpeg"
+            id="nederlandKaart"
+            alt="Topografische kaart van Nederland"
+        >
+
+        <div id="kaartMarkering"></div>
+    </div>
+
+    <div id="kaartAntwoorden"></div>
+
+    <div id="kaartFeedback"></div>
+
+    <div id="kaartScore">
+        Vraag: <span id="kaartVoortgang">1</span> |
+        Goed: <span id="kaartGoed">0</span> |
+        Fout: <span id="kaartFout">0</span>
+    </div>
+
+    <button
+        id="wisselKaartVragen"
+        class="secondary-button"
+        onclick="wisselKaartCategorie()"
+    >
+        Nu steden oefenen
+    </button>
+
+    <button
+        class="secondary-button"
+        onclick="terugNaarMenuVanKaart()"
+    >
+        Terug naar menu
+    </button>
+
+</div>
 <script>
  
 const quizzes = {
@@ -432,7 +571,282 @@ function terugNaarMenu() {
     goed = 0;
     fout = 0;
 }
- 
+ const kaartVragen = {
+    provincies: [
+        { antwoord: "Friesland", x: 60, y: 21 },
+        { antwoord: "Groningen", x: 83, y: 16 },
+        { antwoord: "Drenthe", x: 79, y: 29 },
+        { antwoord: "Overijssel", x: 76, y: 43 },
+        { antwoord: "Flevoland", x: 58, y: 39 },
+        { antwoord: "Gelderland", x: 65, y: 54 },
+        { antwoord: "Utrecht", x: 48, y: 56 },
+        { antwoord: "Noord-Holland", x: 38, y: 37 },
+        { antwoord: "Zuid-Holland", x: 31, y: 56 },
+        { antwoord: "Zeeland", x: 17, y: 76 },
+        { antwoord: "Noord-Brabant", x: 48, y: 72 },
+        { antwoord: "Limburg", x: 65, y: 82 }
+    ],
+
+    steden: [
+        { antwoord: "Amsterdam", x: 40, y: 46 },
+        { antwoord: "Leeuwarden", x: 61, y: 16 },
+        { antwoord: "Groningen", x: 78, y: 15 },
+        { antwoord: "Assen", x: 79, y: 23 },
+        { antwoord: "Zwolle", x: 68, y: 41 },
+        { antwoord: "Utrecht", x: 53, y: 42 },
+        { antwoord: "Arnhem", x: 64, y: 58 },
+        { antwoord: "'s-Hertogenbosch", x: 50, y: 68 },
+        { antwoord: "Den Haag", x: 27, y: 56 },
+        { antwoord: "Rotterdam", x: 31, y: 61 },
+        { antwoord: "Middelburg", x: 11, y: 76 },
+        { antwoord: "Eindhoven", x: 54, y: 79 },
+        { antwoord: "Maastricht", x: 61, y: 95 }
+    ]
+};
+
+let kaartCategorie = "provincies";
+let actieveKaartVragen = [];
+let huidigeKaartVraag = null;
+let kaartVraagNummer = 0;
+let kaartGoed = 0;
+let kaartFout = 0;
+let kaartTimer = null;
+
+function startKaartQuiz() {
+    if (kaartTimer) {
+        clearTimeout(kaartTimer);
+    }
+
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("quiz").style.display = "none";
+    document.getElementById("kaartQuiz").style.display = "block";
+
+    kaartCategorie = "provincies";
+    kaartVraagNummer = 0;
+    kaartGoed = 0;
+    kaartFout = 0;
+
+    actieveKaartVragen = shuffle(
+        kaartVragen[kaartCategorie]
+    );
+
+    document.getElementById("kaartGoed").textContent = "0";
+    document.getElementById("kaartFout").textContent = "0";
+
+    werkKaartTekstenBij();
+    nieuweKaartVraag();
+}
+
+function wisselKaartCategorie() {
+    if (kaartTimer) {
+        clearTimeout(kaartTimer);
+    }
+
+    if (kaartCategorie === "provincies") {
+        kaartCategorie = "steden";
+    } else {
+        kaartCategorie = "provincies";
+    }
+
+    kaartVraagNummer = 0;
+    kaartGoed = 0;
+    kaartFout = 0;
+
+    actieveKaartVragen = shuffle(
+        kaartVragen[kaartCategorie]
+    );
+
+    document.getElementById("kaartGoed").textContent = "0";
+    document.getElementById("kaartFout").textContent = "0";
+    document.getElementById("kaartFeedback").textContent = "";
+
+    werkKaartTekstenBij();
+    nieuweKaartVraag();
+}
+
+function werkKaartTekstenBij() {
+    const instructie =
+        document.getElementById("kaartInstructie");
+
+    const wisselknop =
+        document.getElementById("wisselKaartVragen");
+
+    if (kaartCategorie === "provincies") {
+        instructie.textContent =
+            "Welke provincie wordt aangegeven?";
+
+        wisselknop.textContent =
+            "Nu steden oefenen";
+    } else {
+        instructie.textContent =
+            "Welke stad wordt aangegeven?";
+
+        wisselknop.textContent =
+            "Nu provincies oefenen";
+    }
+}
+
+function nieuweKaartVraag() {
+    if (kaartVraagNummer >= actieveKaartVragen.length) {
+        toonKaartEindscore();
+        return;
+    }
+
+    huidigeKaartVraag =
+        actieveKaartVragen[kaartVraagNummer];
+
+    document.getElementById("kaartFeedback").textContent = "";
+
+    document.getElementById("kaartVoortgang").textContent =
+        (kaartVraagNummer + 1) +
+        " van " +
+        actieveKaartVragen.length;
+
+    const markering =
+        document.getElementById("kaartMarkering");
+
+    markering.style.left = huidigeKaartVraag.x + "%";
+    markering.style.top = huidigeKaartVraag.y + "%";
+
+    maakKaartAntwoorden();
+}
+
+function maakKaartAntwoorden() {
+    const antwoordenElement =
+        document.getElementById("kaartAntwoorden");
+
+    const alleAntwoorden = [
+        ...new Set(
+            kaartVragen[kaartCategorie].map(
+                vraag => vraag.antwoord
+            )
+        )
+    ];
+
+    const fouteAntwoorden = shuffle(
+        alleAntwoorden.filter(
+            antwoord =>
+                antwoord !== huidigeKaartVraag.antwoord
+        )
+    );
+
+    let antwoorden = [
+        huidigeKaartVraag.antwoord,
+        ...fouteAntwoorden.slice(0, 3)
+    ];
+
+    antwoorden = shuffle(antwoorden);
+    antwoordenElement.innerHTML = "";
+
+    antwoorden.forEach(antwoord => {
+        const knop = document.createElement("button");
+
+        knop.type = "button";
+        knop.textContent = antwoord;
+
+        knop.addEventListener("click", function () {
+            controleerKaartAntwoord(antwoord, knop);
+        });
+
+        antwoordenElement.appendChild(knop);
+    });
+}
+
+function controleerKaartAntwoord(antwoord, gekozenKnop) {
+    const knoppen =
+        document.querySelectorAll("#kaartAntwoorden button");
+
+    knoppen.forEach(knop => {
+        knop.disabled = true;
+
+        if (knop.textContent === huidigeKaartVraag.antwoord) {
+            knop.classList.add("correct");
+        }
+    });
+
+    if (antwoord === huidigeKaartVraag.antwoord) {
+        gekozenKnop.classList.add("correct");
+
+        document.getElementById("kaartFeedback").textContent =
+            "✅ Goed!";
+
+        kaartGoed++;
+    } else {
+        gekozenKnop.classList.add("incorrect");
+
+        document.getElementById("kaartFeedback").innerHTML =
+            "❌ Fout. Het juiste antwoord is: <strong>" +
+            huidigeKaartVraag.antwoord +
+            "</strong>";
+
+        kaartFout++;
+    }
+
+    document.getElementById("kaartGoed").textContent =
+        kaartGoed;
+
+    document.getElementById("kaartFout").textContent =
+        kaartFout;
+
+    kaartVraagNummer++;
+
+    kaartTimer = setTimeout(function () {
+        nieuweKaartVraag();
+    }, 1800);
+}
+
+function toonKaartEindscore() {
+    document.getElementById("kaartMarkering").style.display =
+        "none";
+
+    document.getElementById("kaartAntwoorden").innerHTML =
+        "<button type='button' onclick='herstartKaartQuiz()'>" +
+        "Opnieuw oefenen" +
+        "</button>";
+
+    document.getElementById("kaartFeedback").innerHTML =
+        "🏆 Ronde afgerond!<br><br>" +
+        "Je had <strong>" +
+        kaartGoed +
+        " van de " +
+        actieveKaartVragen.length +
+        "</strong> vragen goed.";
+}
+
+function herstartKaartQuiz() {
+    kaartVraagNummer = 0;
+    kaartGoed = 0;
+    kaartFout = 0;
+
+    actieveKaartVragen = shuffle(
+        kaartVragen[kaartCategorie]
+    );
+
+    document.getElementById("kaartMarkering").style.display =
+        "block";
+
+    document.getElementById("kaartGoed").textContent = "0";
+    document.getElementById("kaartFout").textContent = "0";
+    document.getElementById("kaartFeedback").textContent = "";
+
+    nieuweKaartVraag();
+}
+
+function terugNaarMenuVanKaart() {
+    if (kaartTimer) {
+        clearTimeout(kaartTimer);
+        kaartTimer = null;
+    }
+
+    document.getElementById("kaartQuiz").style.display =
+        "none";
+
+    document.getElementById("menu").style.display =
+        "block";
+
+    document.getElementById("kaartMarkering").style.display =
+        "block";
+}
 </script>
 </body>
 </html>
