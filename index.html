@@ -13,7 +13,49 @@ body {
     text-align: center;
     background-color: #f5f7fa;
 }
+<div id="menu" class="quiz-box">
+    <h1>🇳🇱 Topografie Nederland</h1>
+    <p>Kies een onderdeel:</p>
 
+    <button onclick="startQuiz('provincies')">
+        Provincies & Hoofdsteden
+    </button>
+
+    <button onclick="startQuiz('steden')">
+        Grote Steden
+    </button>
+
+    <button onclick="startQuiz('vliegvelden')">
+        Vliegvelden
+    </button>
+
+    <button onclick="startQuiz('rivieren')">
+        Grote Rivieren
+    </button>
+</div>
+
+<div id="quiz" class="quiz-box" style="display:none;">
+    <h1 id="titel"></h1>
+
+    <p>Wat hoort bij:</p>
+
+    <div id="province" class="province"></div>
+
+    <div id="answers"></div>
+
+    <div id="feedback"></div>
+
+    <div id="score">
+        Goed: <span id="correct">0</span> |
+        Fout: <span id="wrong">0</span>
+    </div>
+
+    <br>
+
+    <button onclick="terugNaarMenu()">
+        Terug naar menu
+    </button>
+</div>
 .quiz-box {
     background: white;
     padding: 30px;
@@ -90,24 +132,78 @@ button:hover {
 
 <script>
 
-const data = [
-    { provincie: "Groningen", hoofdstad: "Groningen" },
-    { provincie: "Friesland", hoofdstad: "Leeuwarden" },
-    { provincie: "Drenthe", hoofdstad: "Assen" },
-    { provincie: "Overijssel", hoofdstad: "Zwolle" },
-    { provincie: "Flevoland", hoofdstad: "Lelystad" },
-    { provincie: "Gelderland", hoofdstad: "Arnhem" },
-    { provincie: "Utrecht", hoofdstad: "Utrecht" },
-    { provincie: "Noord-Holland", hoofdstad: "Haarlem" },
-    { provincie: "Zuid-Holland", hoofdstad: "Den Haag" },
-    { provincie: "Zeeland", hoofdstad: "Middelburg" },
-    { provincie: "Noord-Brabant", hoofdstad: "'s-Hertogenbosch" },
-    { provincie: "Limburg", hoofdstad: "Maastricht" }
-];
+const quizzes = {
 
+    provincies: [
+        { vraag: "Groningen", antwoord: "Groningen" },
+        { vraag: "Friesland", antwoord: "Leeuwarden" },
+        { vraag: "Drenthe", antwoord: "Assen" },
+        { vraag: "Overijssel", antwoord: "Zwolle" },
+        { vraag: "Flevoland", antwoord: "Lelystad" },
+        { vraag: "Gelderland", antwoord: "Arnhem" },
+        { vraag: "Utrecht", antwoord: "Utrecht" },
+        { vraag: "Noord-Holland", antwoord: "Haarlem" },
+        { vraag: "Zuid-Holland", antwoord: "Den Haag" },
+        { vraag: "Zeeland", antwoord: "Middelburg" },
+        { vraag: "Noord-Brabant", antwoord: "'s-Hertogenbosch" },
+        { vraag: "Limburg", antwoord: "Maastricht" }
+    ],
+
+    steden: [
+        { vraag: "Amsterdam ligt in provincie", antwoord: "Noord-Holland" },
+        { vraag: "Rotterdam ligt in provincie", antwoord: "Zuid-Holland" },
+        { vraag: "Eindhoven ligt in provincie", antwoord: "Noord-Brabant" },
+        { vraag: "Nijmegen ligt in provincie", antwoord: "Gelderland" },
+        { vraag: "Groningen ligt in provincie", antwoord: "Groningen" },
+        { vraag: "Zwolle ligt in provincie", antwoord: "Overijssel" }
+    ],
+
+    vliegvelden: [
+        { vraag: "Schiphol", antwoord: "Amsterdam" },
+        { vraag: "Rotterdam The Hague Airport", antwoord: "Rotterdam" },
+        { vraag: "Eindhoven Airport", antwoord: "Eindhoven" },
+        { vraag: "Maastricht Aachen Airport", antwoord: "Maastricht" },
+        { vraag: "Groningen Airport Eelde", antwoord: "Groningen" }
+    ],
+
+    rivieren: [
+        { vraag: "Door welke stad stroomt de Maas?", antwoord: "Maastricht" },
+        { vraag: "Door welke stad stroomt de Waal?", antwoord: "Nijmegen" },
+        { vraag: "Door welke stad stroomt de IJssel?", antwoord: "Deventer" },
+        { vraag: "Door welke stad stroomt de Rijn?", antwoord: "Arnhem" },
+        { vraag: "Door welke stad stroomt de Lek?", antwoord: "Vianen" }
+    ]
+};
+
+let huidigeQuiz;
+let huidigeVraag;
 let goed = 0;
 let fout = 0;
-let huidigeVraag;
+
+function startQuiz(type) {
+
+    huidigeQuiz = quizzes[type];
+
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("quiz").style.display = "block";
+
+    document.getElementById("titel").textContent =
+        type.charAt(0).toUpperCase() + type.slice(1);
+
+    nieuweVraag();
+}
+
+function terugNaarMenu() {
+
+    document.getElementById("menu").style.display = "block";
+    document.getElementById("quiz").style.display = "none";
+
+    goed = 0;
+    fout = 0;
+
+    document.getElementById("correct").textContent = 0;
+    document.getElementById("wrong").textContent = 0;
+}
 
 function shuffle(array) {
     return array.sort(() => Math.random() - 0.5);
@@ -117,19 +213,22 @@ function nieuweVraag() {
 
     document.getElementById("feedback").textContent = "";
 
-    huidigeVraag = data[Math.floor(Math.random() * data.length)];
+    huidigeVraag =
+        huidigeQuiz[Math.floor(Math.random() * huidigeQuiz.length)];
 
     document.getElementById("province").textContent =
-        huidigeVraag.provincie;
+        huidigeVraag.vraag;
 
-    let antwoorden = [huidigeVraag.hoofdstad];
+    let antwoorden = [huidigeVraag.antwoord];
 
     while (antwoorden.length < 4) {
-        const stad =
-            data[Math.floor(Math.random() * data.length)].hoofdstad;
 
-        if (!antwoorden.includes(stad)) {
-            antwoorden.push(stad);
+        const random =
+            huidigeQuiz[Math.floor(Math.random() * huidigeQuiz.length)]
+                .antwoord;
+
+        if (!antwoorden.includes(random)) {
+            antwoorden.push(random);
         }
     }
 
@@ -143,17 +242,20 @@ function nieuweVraag() {
         const knop = document.createElement("button");
         knop.textContent = antwoord;
 
-        knop.onclick = function() {
+        knop.onclick = () => {
 
-            if (antwoord === huidigeVraag.hoofdstad) {
+            if (antwoord === huidigeVraag.antwoord) {
+
                 knop.classList.add("correct");
-                document.getElementById("feedback").textContent =
+                document.getElementById("feedback").innerHTML =
                     "✅ Goed!";
                 goed++;
+
             } else {
+
                 knop.classList.add("incorrect");
-                document.getElementById("feedback").textContent =
-                    `❌ Fout. Het juiste antwoord is ${huidigeVraag.hoofdstad}`;
+                document.getElementById("feedback").innerHTML =
+                    `❌ Fout. Het juiste antwoord is ${huidigeVraag.antwoord}`;
                 fout++;
             }
 
@@ -169,8 +271,6 @@ function nieuweVraag() {
         answersDiv.appendChild(knop);
     });
 }
-
-nieuweVraag();
 
 </script>
 
