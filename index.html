@@ -25,27 +25,18 @@ min-height: 100vh;
 }
  
 .quiz-box {
-background: linear-gradient(
-135deg,
-#001f4d,
-#003d99,
-#0057b8
-);
- 
-backdrop-filter: blur(10px);
+background: rgba(255,255,255,0.96);
+color: #003366;
  
 padding: 40px;
- 
 border-radius: 24px;
- 
-box-shadow:
-0 20px 40px rgba(0,0,0,0.25);
+box-shadow: 0 20px 40px rgba(0,0,0,0.25);
  
 margin-top: 30px;
 }
 
 h1 {
-    color: #003366;
+color: #001f4d;
 }
 
 .province {
@@ -64,15 +55,22 @@ button {
     border-radius: 8px;
     cursor: pointer;
     background: linear-gradient(
-135deg,
-#ff6b00,
-#ff8c00
-);
+    135deg,
+    #ff6b00,
+    #ff8c00
+    );
     color: white;
+    transition: all 0.25s ease;
 }
 
 button:hover {
-    background-color: #005ea6;
+    background: linear-gradient(
+        135deg,
+        #ff8c00,
+        #ffb347
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255,107,0,0.4);
 }
 
 .correct {
@@ -281,8 +279,7 @@ button:hover {
 
     <button
         class="secondary-button"
-        onclick="terugNaarMenuVanKaart()"
-    >
+        onclick="terugNaarMenuVanKaart()">
         Terug naar menu
     </button>
 
@@ -625,6 +622,9 @@ function startKaartQuiz() {
     kaartVraagNummer = 0;
     kaartGoed = 0;
     kaartFout = 0;
+    document.getElementById("kaartMarkering").style.display = "block";
+    document.getElementById("kaartFeedback").textContent = "";
+    document.getElementById("kaartAntwoorden").innerHTML = "";
 
     actieveKaartVragen = shuffle(
         kaartVragen[kaartCategorie]
@@ -846,6 +846,9 @@ function terugNaarMenuVanKaart() {
 
     document.getElementById("kaartMarkering").style.display =
         "block";
+document.getElementById("kaartFeedback").textContent = "";
+document.getElementById("kaartAntwoorden").innerHTML = "";
+    
 }
 </script>
 </body>
