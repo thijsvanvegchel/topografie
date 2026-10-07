@@ -284,6 +284,9 @@ button:hover {
     </button>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js">
+</script>
+    
 <script>
  
 const quizzes = {
@@ -376,6 +379,30 @@ function shuffle(array) {
     return kopie;
 }
 
+function vuurwerk() {
+
+    confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.6 }
+    });
+
+    setTimeout(() => {
+        confetti({
+            particleCount: 150,
+            spread: 120,
+            origin: { x: 0.2, y: 0.6 }
+        });
+    }, 250);
+
+    setTimeout(() => {
+        confetti({
+            particleCount: 150,
+            spread: 120,
+            origin: { x: 0.8, y: 0.6 }
+        });
+    }, 500);
+}
 function startQuiz(type) {
     huidigeCategorie = quizzes[type];
 
@@ -512,13 +539,14 @@ function toonEindscore() {
     let beoordeling;
 
     if (percentage === 100) {
-        beoordeling = "🏆 Perfect! Alles goed!";
-    } else if (percentage >= 80) {
-        beoordeling = "🥇 Heel goed gedaan!";
+beoordeling = "👑 Fantastisch Eefje! Alles goed!";
+vuurwerk();
+} else if (percentage >= 80) {
+        beoordeling = "🥇 Heel goed gedaan Eefje!";
     } else if (percentage >= 60) {
         beoordeling = "🥈 Goed bezig!";
     } else {
-        beoordeling = "📚 Nog een keer oefenen!";
+        beoordeling = "📚 Nog een keer oefenen samen met papa of mama!";
     }
 
     document.getElementById("province").textContent = "Quiz afgerond";
@@ -695,7 +723,7 @@ function nieuweKaartVraag() {
 
     huidigeKaartVraag =
         actieveKaartVragen[kaartVraagNummer];
-        console.log(huidigeKaartVraag);
+
     document.getElementById("kaartFeedback").textContent = "";
 
     document.getElementById("kaartVoortgang").textContent =
@@ -703,6 +731,7 @@ function nieuweKaartVraag() {
         " van " +
         actieveKaartVragen.length;
 
+    
     const markering =
         document.getElementById("kaartMarkering");
 
@@ -797,21 +826,44 @@ function controleerKaartAntwoord(antwoord, gekozenKnop) {
 }
 
 function toonKaartEindscore() {
-    document.getElementById("kaartMarkering").style.display =
-        "none";
-
-    document.getElementById("kaartAntwoorden").innerHTML =
-        "<button type='button' onclick='herstartKaartQuiz()'>" +
-        "Opnieuw oefenen" +
-        "</button>";
-
-    document.getElementById("kaartFeedback").innerHTML =
-        "🏆 Ronde afgerond!<br><br>" +
-        "Je had <strong>" +
-        kaartGoed +
-        " van de " +
-        actieveKaartVragen.length +
-        "</strong> vragen goed.";
+ 
+const percentage =
+Math.round(
+(kaartGoed / actieveKaartVragen.length) * 100
+);
+ 
+if (percentage >= 90) {
+vuurwerk();
+}
+ 
+document.getElementById("kaartMarkering").style.display =
+"none";
+ 
+document.getElementById("kaartAntwoorden").innerHTML =
+"<button type='button' onclick='herstartKaartQuiz()'>" +
+"Opnieuw oefenen" +
+"</button>";
+ 
+let beoordeling = "";
+ 
+if (percentage === 100) {
+beoordeling = "👑 Fantastisch Eefje! Alles goed!";
+} else if (percentage >= 90) {
+beoordeling = "🥇 Super gedaan!";
+} else if (percentage >= 75) {
+beoordeling = "🥈 Heel goed!";
+} else {
+beoordeling = "🗺️ Goed geoefend!";
+}
+ 
+document.getElementById("kaartFeedback").innerHTML =
+beoordeling +
+"<br><br>" +
+"Je had <strong>" +
+kaartGoed +
+" van de " +
+actieveKaartVragen.length +
+"</strong> vragen goed.";
 }
 
 function herstartKaartQuiz() {
