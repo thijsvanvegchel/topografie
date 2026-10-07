@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topografie Quiz Nederland</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    text-align: center;
+    background-color: #f5f7fa;
+}
+
+.quiz-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #003366;
+}
+
+.province {
+    font-size: 2em;
+    margin: 20px 0;
+    color: #ff6600;
+}
+
+button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 15px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #0078d4;
+    color: white;
+}
+
+button:hover {
+    background-color: #005ea6;
+}
+
+.correct {
+    background-color: #28a745 !important;
+}
+
+.incorrect {
+    background-color: #dc3545 !important;
+}
+
+#feedback {
+    font-size: 1.3em;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+#score {
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+</style>
+
+</head>
+<body>
+
+<div class="quiz-box">
+    <h1>🇳🇱 Topografie Quiz Nederland</h1>
+
+    <p>Wat is de hoofdstad van:</p>
+
+    <div id="province" class="province"></div>
+
+    <div id="answers"></div>
+
+    <div id="feedback"></div>
+
+    <div id="score">
+        Goed: <span id="correct">0</span> |
+        Fout: <span id="wrong">0</span>
+    </div>
+</div>
+
+<script>
+
+const data = [
+    { provincie: "Groningen", hoofdstad: "Groningen" },
+    { provincie: "Friesland", hoofdstad: "Leeuwarden" },
+    { provincie: "Drenthe", hoofdstad: "Assen" },
+    { provincie: "Overijssel", hoofdstad: "Zwolle" },
+    { provincie: "Flevoland", hoofdstad: "Lelystad" },
+    { provincie: "Gelderland", hoofdstad: "Arnhem" },
+    { provincie: "Utrecht", hoofdstad: "Utrecht" },
+    { provincie: "Noord-Holland", hoofdstad: "Haarlem" },
+    { provincie: "Zuid-Holland", hoofdstad: "Den Haag" },
+    { provincie: "Zeeland", hoofdstad: "Middelburg" },
+    { provincie: "Noord-Brabant", hoofdstad: "'s-Hertogenbosch" },
+    { provincie: "Limburg", hoofdstad: "Maastricht" }
+];
+
+let goed = 0;
+let fout = 0;
+let huidigeVraag;
+
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
+function nieuweVraag() {
+
+    document.getElementById("feedback").textContent = "";
+
+    huidigeVraag = data[Math.floor(Math.random() * data.length)];
+
+    document.getElementById("province").textContent =
+        huidigeVraag.provincie;
+
+    let antwoorden = [huidigeVraag.hoofdstad];
+
+    while (antwoorden.length < 4) {
+        const stad =
+            data[Math.floor(Math.random() * data.length)].hoofdstad;
+
+        if (!antwoorden.includes(stad)) {
+            antwoorden.push(stad);
+        }
+    }
+
+    antwoorden = shuffle(antwoorden);
+
+    const answersDiv = document.getElementById("answers");
+    answersDiv.innerHTML = "";
+
+    antwoorden.forEach(antwoord => {
+
+        const knop = document.createElement("button");
+        knop.textContent = antwoord;
+
+        knop.onclick = function() {
+
+            if (antwoord === huidigeVraag.hoofdstad) {
+                knop.classList.add("correct");
+                document.getElementById("feedback").textContent =
+                    "✅ Goed!";
+                goed++;
+            } else {
+                knop.classList.add("incorrect");
+                document.getElementById("feedback").textContent =
+                    `❌ Fout. Het juiste antwoord is ${huidigeVraag.hoofdstad}`;
+                fout++;
+            }
+
+            document.getElementById("correct").textContent = goed;
+            document.getElementById("wrong").textContent = fout;
+
+            Array.from(document.querySelectorAll("#answers button"))
+                .forEach(b => b.disabled = true);
+
+            setTimeout(nieuweVraag, 2000);
+        };
+
+        answersDiv.appendChild(knop);
+    });
+}
+
+nieuweVraag();
+
+</script>
+
+</body>
+</html>
