@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Topografie Nederland</title>
+<title>Topografie voor Eefje</title>
 
 <style>
 
@@ -125,11 +125,286 @@ button:hover {
 <script>
  
 const quizzes = {
-...
+    provincies: {
+        titel: "Provincies & Hoofdsteden",
+        instructie: "Wat is de hoofdstad van:",
+        vragen: [
+            { vraag: "Groningen", antwoord: "Groningen" },
+            { vraag: "Friesland", antwoord: "Leeuwarden" },
+            { vraag: "Drenthe", antwoord: "Assen" },
+            { vraag: "Overijssel", antwoord: "Zwolle" },
+            { vraag: "Flevoland", antwoord: "Lelystad" },
+            { vraag: "Gelderland", antwoord: "Arnhem" },
+            { vraag: "Utrecht", antwoord: "Utrecht" },
+            { vraag: "Noord-Holland", antwoord: "Haarlem" },
+            { vraag: "Zuid-Holland", antwoord: "Den Haag" },
+            { vraag: "Zeeland", antwoord: "Middelburg" },
+            { vraag: "Noord-Brabant", antwoord: "'s-Hertogenbosch" },
+            { vraag: "Limburg", antwoord: "Maastricht" }
+        ]
+    },
+
+    steden: {
+        titel: "Grote Steden",
+        instructie: "In welke provincie ligt:",
+        vragen: [
+            { vraag: "Amsterdam", antwoord: "Noord-Holland" },
+            { vraag: "Rotterdam", antwoord: "Zuid-Holland" },
+            { vraag: "Den Haag", antwoord: "Zuid-Holland" },
+            { vraag: "Utrecht", antwoord: "Utrecht" },
+            { vraag: "Eindhoven", antwoord: "Noord-Brabant" },
+            { vraag: "Tilburg", antwoord: "Noord-Brabant" },
+            { vraag: "Groningen", antwoord: "Groningen" },
+            { vraag: "Almere", antwoord: "Flevoland" },
+            { vraag: "Breda", antwoord: "Noord-Brabant" },
+            { vraag: "Nijmegen", antwoord: "Gelderland" },
+            { vraag: "Apeldoorn", antwoord: "Gelderland" },
+            { vraag: "Haarlem", antwoord: "Noord-Holland" },
+            { vraag: "Arnhem", antwoord: "Gelderland" },
+            { vraag: "Enschede", antwoord: "Overijssel" },
+            { vraag: "Amersfoort", antwoord: "Utrecht" },
+            { vraag: "Zwolle", antwoord: "Overijssel" },
+            { vraag: "Leeuwarden", antwoord: "Friesland" },
+            { vraag: "Maastricht", antwoord: "Limburg" }
+        ]
+    },
+
+    vliegvelden: {
+        titel: "Vliegvelden",
+        instructie: "Bij welke plaats ligt:",
+        vragen: [
+            { vraag: "Schiphol", antwoord: "Amsterdam" },
+            { vraag: "Rotterdam The Hague Airport", antwoord: "Rotterdam" },
+            { vraag: "Eindhoven Airport", antwoord: "Eindhoven" },
+            { vraag: "Maastricht Aachen Airport", antwoord: "Maastricht" },
+            { vraag: "Groningen Airport Eelde", antwoord: "Groningen" }
+        ]
+    },
+
+    rivieren: {
+        titel: "Grote Rivieren",
+        instructie: "Door welke stad stroomt deze rivier?",
+        vragen: [
+            { vraag: "De Maas", antwoord: "Maastricht" },
+            { vraag: "De Waal", antwoord: "Nijmegen" },
+            { vraag: "De Nederrijn", antwoord: "Arnhem" },
+            { vraag: "De IJssel", antwoord: "Deventer" },
+            { vraag: "De Lek", antwoord: "Vianen" }
+        ]
+    }
 };
- 
+
+let huidigeCategorie = null;
+let huidigeVragen = [];
+let huidigeVraag = null;
+let vraagNummer = 0;
+let goed = 0;
+let fout = 0;
+let volgendeVraagTimer = null;
+
+function shuffle(array) {
+    const kopie = [...array];
+
+    for (let i = kopie.length - 1; i > 0; i--) {
+        const willekeurigeIndex = Math.floor(Math.random() * (i + 1));
+        [kopie[i], kopie[willekeurigeIndex]] =
+            [kopie[willekeurigeIndex], kopie[i]];
+    }
+
+    return kopie;
+}
+
 function startQuiz(type) {
-...
+    huidigeCategorie = quizzes[type];
+
+    if (!huidigeCategorie) {
+        console.error("Onbekende quizcategorie:", type);
+        return;
+    }
+
+    if (volgendeVraagTimer) {
+        clearTimeout(volgendeVraagTimer);
+        volgendeVraagTimer = null;
+    }
+
+    huidigeVragen = shuffle(huidigeCategorie.vragen);
+    vraagNummer = 0;
+    goed = 0;
+    fout = 0;
+
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("quiz").style.display = "block";
+
+    document.getElementById("titel").textContent =
+        huidigeCategorie.titel;
+
+    document.getElementById("correct").textContent = "0";
+    document.getElementById("wrong").textContent = "0";
+    document.getElementById("feedback").textContent = "";
+
+    nieuweVraag();
+}
+
+function nieuweVraag() {
+    if (!huidigeCategorie || huidigeVragen.length === 0) {
+        return;
+    }
+
+    if (vraagNummer >= huidigeVragen.length) {
+        toonEindscore();
+        return;
+    }
+
+    huidigeVraag = huidigeVragen[vraagNummer];
+
+    const vraagElement = document.getElementById("province");
+    const antwoordenElement = document.getElementById("answers");
+    const feedbackElement = document.getElementById("feedback");
+
+    feedbackElement.textContent = "";
+
+    vraagElement.innerHTML =
+        "<small style='display:block; color:#333; font-size:0.55em; " +
+        "margin-bottom:10px;'>" +
+        huidigeCategorie.instructie +
+        "</small>" +
+        huidigeVraag.vraag;
+
+    const alleAntwoorden = [
+        ...new Set(
+            huidigeCategorie.vragen.map(item => item.antwoord)
+        )
+    ];
+
+    let antwoorden = [huidigeVraag.antwoord];
+
+    const alternatieven = shuffle(
+        alleAntwoorden.filter(
+            antwoord => antwoord !== huidigeVraag.antwoord
+        )
+    );
+
+    const aantalAlternatieven = Math.min(3, alternatieven.length);
+
+    antwoorden.push(
+        ...alternatieven.slice(0, aantalAlternatieven)
+    );
+
+    antwoorden = shuffle(antwoorden);
+
+    antwoordenElement.innerHTML = "";
+
+    antwoorden.forEach(antwoord => {
+        const knop = document.createElement("button");
+        knop.type = "button";
+        knop.textContent = antwoord;
+
+        knop.addEventListener("click", function () {
+            controleerAntwoord(antwoord, knop);
+        });
+
+        antwoordenElement.appendChild(knop);
+    });
+}
+
+function controleerAntwoord(gekozenAntwoord, gekozenKnop) {
+    const knoppen = document.querySelectorAll("#answers button");
+
+    knoppen.forEach(knop => {
+        knop.disabled = true;
+
+        if (knop.textContent === huidigeVraag.antwoord) {
+            knop.classList.add("correct");
+        }
+    });
+
+    if (gekozenAntwoord === huidigeVraag.antwoord) {
+        gekozenKnop.classList.add("correct");
+        document.getElementById("feedback").textContent = "✅ Goed!";
+        goed++;
+    } else {
+        gekozenKnop.classList.add("incorrect");
+
+        document.getElementById("feedback").innerHTML =
+            "❌ Fout. Het juiste antwoord is: <strong>" +
+            huidigeVraag.antwoord +
+            "</strong>";
+
+        fout++;
+    }
+
+    document.getElementById("correct").textContent = goed;
+    document.getElementById("wrong").textContent = fout;
+
+    vraagNummer++;
+
+    volgendeVraagTimer = setTimeout(function () {
+        nieuweVraag();
+    }, 1800);
+}
+
+function toonEindscore() {
+    const totaal = huidigeVragen.length;
+    const percentage = Math.round((goed / totaal) * 100);
+
+    let beoordeling;
+
+    if (percentage === 100) {
+        beoordeling = "🏆 Perfect! Alles goed!";
+    } else if (percentage >= 80) {
+        beoordeling = "🥇 Heel goed gedaan!";
+    } else if (percentage >= 60) {
+        beoordeling = "🥈 Goed bezig!";
+    } else {
+        beoordeling = "📚 Nog een keer oefenen!";
+    }
+
+    document.getElementById("province").textContent = "Quiz afgerond";
+    document.getElementById("answers").innerHTML =
+        "<button type='button' onclick='herstartQuiz()'>" +
+        "Opnieuw proberen" +
+        "</button>";
+
+    document.getElementById("feedback").innerHTML =
+        beoordeling +
+        "<br><br>Je had <strong>" +
+        goed +
+        " van de " +
+        totaal +
+        "</strong> vragen goed.";
+}
+
+function herstartQuiz() {
+    huidigeVragen = shuffle(huidigeCategorie.vragen);
+    vraagNummer = 0;
+    goed = 0;
+    fout = 0;
+
+    document.getElementById("correct").textContent = "0";
+    document.getElementById("wrong").textContent = "0";
+    document.getElementById("feedback").textContent = "";
+
+    nieuweVraag();
+}
+
+function terugNaarMenu() {
+    if (volgendeVraagTimer) {
+        clearTimeout(volgendeVraagTimer);
+        volgendeVraagTimer = null;
+    }
+
+    document.getElementById("quiz").style.display = "none";
+    document.getElementById("menu").style.display = "block";
+
+    document.getElementById("answers").innerHTML = "";
+    document.getElementById("feedback").textContent = "";
+
+    huidigeCategorie = null;
+    huidigeVragen = [];
+    huidigeVraag = null;
+    vraagNummer = 0;
+    goed = 0;
+    fout = 0;
 }
  
 </script>
