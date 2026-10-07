@@ -635,6 +635,7 @@ function startKaartQuiz() {
 
     werkKaartTekstenBij();
     nieuweKaartVraag();
+
 }
 
 function wisselKaartCategorie() {
@@ -694,7 +695,7 @@ function nieuweKaartVraag() {
 
     huidigeKaartVraag =
         actieveKaartVragen[kaartVraagNummer];
-
+        console.log(huidigeKaartVraag);
     document.getElementById("kaartFeedback").textContent = "";
 
     document.getElementById("kaartVoortgang").textContent =
