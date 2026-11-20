@@ -747,6 +747,205 @@ h1 {
         font-size: 1.05em;
     }
 }
+
+/* ===== Menu-indeling en Toets jezelf ===== */
+
+.menu-kop.eerste {
+    margin-top: 12px;
+    padding-top: 0;
+    border-top: none;
+}
+
+.menu-raster.vier {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+#menu .toets-raster button {
+    background: linear-gradient(135deg, #001f4d, #0055cc);
+}
+
+#menu .toets-raster .prestatie {
+    font-size: 0.8em;
+    opacity: 0.9;
+}
+
+#toetsAntwoorden {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+#toetsAntwoorden button {
+    margin: 0;
+    padding: 14px 8px;
+    min-height: 52px;
+    font-size: 1.05em;
+    line-height: 1.2;
+}
+
+#toetsAntwoorden .schrijfveld,
+#toetsAntwoorden .schrijfveld + button,
+#toetsAntwoorden button:only-child,
+#toetsAntwoorden .volle-breedte {
+    grid-column: 1 / -1;
+    margin: 0;
+}
+
+#toetsInstructie {
+    margin: 0 0 6px;
+    font-weight: 600;
+}
+
+#toetsInstructie:empty,
+#toetsVraag:empty {
+    display: none;
+}
+
+#toetsFeedback {
+    min-height: 1.6em;
+    margin: 12px 0;
+    font-size: 1.1em;
+}
+
+#toetsScore {
+    margin: 10px 0;
+    color: #475569;
+}
+
+button.gekozen,
+button.gekozen:disabled {
+    background: linear-gradient(135deg, #001f4d, #0055cc) !important;
+    color: white !important;
+    opacity: 1 !important;
+}
+
+.schrijfveld.gekozen {
+    border-color: #0055cc;
+}
+
+.cijfer-label {
+    font-size: 0.5em;
+    color: #475569;
+}
+
+.cijfer {
+    display: inline-block;
+    min-width: 2.6em;
+    margin: 4px 0;
+    padding: 4px 18px;
+    border-radius: 16px;
+    font-size: 1.6em;
+    font-weight: bold;
+    color: white;
+    animation: reeksPop 0.6s ease;
+}
+
+.cijfer.voldoende {
+    background: linear-gradient(135deg, #1e9e45, #28a745);
+}
+
+.cijfer.onvoldoende {
+    background: linear-gradient(135deg, #c62833, #dc3545);
+}
+
+.toets-eindknoppen {
+    display: grid;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.toets-eindknoppen button {
+    margin: 0;
+}
+
+.cijfer-bericht {
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.fouten-overzicht {
+    margin: 14px auto 0;
+    max-width: 560px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    text-align: left;
+    font-size: 0.85em;
+    font-weight: normal;
+}
+
+.fouten-overzicht ul {
+    margin: 8px 0 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.fouten-overzicht li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    padding: 6px 0;
+    border-top: 1px solid #e2e8f0;
+}
+
+.fout-vraag {
+    color: #475569;
+}
+
+.fout-antwoord s {
+    color: #dc3545;
+}
+
+@media (max-width: 600px) {
+    .menu-raster.vier {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #toetsAntwoorden {
+        gap: 8px;
+    }
+
+    #toetsAntwoorden button {
+        font-size: 0.95em;
+        padding: 10px 6px;
+        min-height: 46px;
+    }
+}
+
+/* Liggend scherm: kaart links, vraag rechts (net als de kaartquiz) */
+@media (min-width: 800px) and (orientation: landscape) {
+    #toetsScherm.met-kaart[style*="block"] {
+        display: grid !important;
+        grid-template-columns: auto minmax(280px, 1fr);
+        grid-template-rows: auto auto auto auto auto auto 1fr;
+        column-gap: 30px;
+        align-items: start;
+    }
+
+    #toetsScherm.met-kaart > h1 {
+        grid-column: 1 / -1;
+    }
+
+    #toetsScherm.met-kaart > #toetsKaartPlek {
+        grid-column: 1;
+        grid-row: 2 / span 6;
+    }
+
+    #toetsScherm.met-kaart > :not(h1):not(#toetsKaartPlek) {
+        grid-column: 2;
+    }
+
+    #toetsScherm.met-kaart #toetsAntwoorden {
+        grid-template-columns: 1fr;
+    }
+
+    #toetsScherm.met-kaart #toetsInstructie {
+        margin-top: 10px;
+    }
+}
 </style>
 
 </head>
@@ -780,49 +979,52 @@ h1 {
         </button>
     </div>
 
-    <p class="menu-label">Kies een onderdeel:</p>
+    <h2 class="menu-kop eerste">Deel 1 · Provincies en Hoofdsteden</h2>
 
     <div class="menu-raster">
-        <button onclick="startQuiz('provincies')" data-onderdeel="tekst-provincies">
-            <span class="tegel-icoon">🏛️</span>
-            <span class="tegel-naam">Provincies & Hoofdsteden</span>
-        </button>
         <button onclick="startKaartQuiz()" data-onderdeel="kaart-provincies,kaart-steden">
-            <span class="tegel-icoon">🗺️</span>
             <span class="tegel-naam">Kaart van Nederland</span>
         </button>
+        <button onclick="startQuiz('provincies')" data-onderdeel="tekst-provincies">
+            <span class="tegel-naam">Provincies & Hoofdsteden</span>
+        </button>
         <button onclick="startQuiz('steden')" data-onderdeel="tekst-steden">
-            <span class="tegel-icoon">🏙️</span>
             <span class="tegel-naam">Grote Steden</span>
         </button>
-        <button onclick="startQuiz('vliegvelden')" data-onderdeel="tekst-vliegvelden">
-            <span class="tegel-icoon">✈️</span>
-            <span class="tegel-naam">Vliegvelden</span>
-        </button>
         <button onclick="startQuiz('rivieren')" data-onderdeel="tekst-rivieren">
-            <span class="tegel-icoon">🌊</span>
             <span class="tegel-naam">Grote Rivieren</span>
+        </button>
+        <button onclick="startQuiz('vliegvelden')" data-onderdeel="tekst-vliegvelden">
+            <span class="tegel-naam">Vliegvelden</span>
         </button>
     </div>
 
-    <h2 class="menu-kop">📝 Toets: Streken en wateren</h2>
+    <h2 class="menu-kop">Deel 2 · Streken en Wateren</h2>
 
     <div class="menu-raster drie">
         <button onclick="startKaartQuiz('wateren')" data-onderdeel="kaart-wateren">
-            <span class="tegel-icoon">💧</span>
             <span class="tegel-naam">Wateren</span>
         </button>
         <button onclick="startKaartQuiz('eilanden')" data-onderdeel="kaart-eilanden">
-            <span class="tegel-icoon">🏝️</span>
             <span class="tegel-naam">Waddeneilanden</span>
         </button>
         <button onclick="startKaartQuiz('streken')" data-onderdeel="kaart-streken">
-            <span class="tegel-icoon">🌳</span>
             <span class="tegel-naam">Streken</span>
         </button>
-        <button onclick="startKaartQuiz('toets')" data-onderdeel="kaart-toets" class="tegel-breed">
-            <span class="tegel-icoon">⭐</span>
-            <span class="tegel-naam">Hele toets oefenen</span>
+    </div>
+
+    <h2 class="menu-kop">🎓 Toets jezelf</h2>
+    <p class="legenda">Zoals op school: pas aan het eind zie je je cijfer en je fouten.</p>
+
+    <div class="menu-raster drie toets-raster">
+        <button onclick="startToets('deel1')" data-toets="deel1">
+            <span class="tegel-naam">Deel 1: Provincies en Hoofdsteden</span>
+        </button>
+        <button onclick="startToets('deel2')" data-toets="deel2">
+            <span class="tegel-naam">Deel 2: Streken en Wateren</span>
+        </button>
+        <button onclick="startToets('alles')" data-toets="alles">
+            <span class="tegel-naam">Alles door elkaar</span>
         </button>
     </div>
 
@@ -862,7 +1064,7 @@ h1 {
 
     <div id="kaartContainer">
         <img
-            src="kaart-nederland.jpeg"
+            src="afbeeldingen/kaart-nederland.jpeg"
             id="nederlandKaart"
             alt="Topografische kaart van Nederland"
         >
@@ -896,6 +1098,33 @@ h1 {
     </button>
 
 </div>
+<div id="toetsScherm" class="quiz-box" style="display:none;">
+
+    <h1 id="toetsTitel">🎓 Toets</h1>
+
+    <p id="toetsInstructie"></p>
+
+    <div id="toetsKaartPlek"></div>
+
+    <div id="toetsVraag" class="province"></div>
+
+    <div id="toetsAntwoorden"></div>
+
+    <div id="toetsFeedback"></div>
+
+    <div id="toetsScore">
+        <span id="toetsVoortgang"></span><span class="reeks-teller"></span>
+    </div>
+
+    <button
+        id="toetsStopKnop"
+        class="secondary-button"
+        onclick="stopToets()">
+        Terug naar menu
+    </button>
+
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js">
 </script>
     
@@ -991,7 +1220,7 @@ function beoordeelGeschreven(invoer, juist) {
 }
 
 // Maakt een tekstvak met een knop "Controleer"
-function maakSchrijfveld(container, juist, klaar) {
+function maakSchrijfveld(container, juist, klaar, opties = {}) {
     container.innerHTML = "";
 
     const veld = document.createElement("input");
@@ -1004,7 +1233,7 @@ function maakSchrijfveld(container, juist, klaar) {
 
     const knop = document.createElement("button");
     knop.type = "button";
-    knop.textContent = "Controleer";
+    knop.textContent = opties.knopTekst || "Controleer";
 
     function controleer() {
         if (veld.disabled) return;
@@ -1018,9 +1247,13 @@ function maakSchrijfveld(container, juist, klaar) {
 
         veld.disabled = true;
         knop.disabled = true;
-        veld.classList.add(uitslag === "goed" ? "correct" : "incorrect");
+        if (opties.verbergUitslag) {
+            veld.classList.add("gekozen");
+        } else {
+            veld.classList.add(uitslag === "goed" ? "correct" : "incorrect");
+        }
 
-        klaar(uitslag);
+        klaar(uitslag, veld.value.trim());
     }
 
     knop.addEventListener("click", controleer);
@@ -1441,6 +1674,22 @@ function werkMenuBij() {
         }
 
         plek.innerHTML = sterrenHtml(sterren) + (medaille ? " " + MEDAILLES[medaille] : "");
+    });
+
+    document.querySelectorAll("#menu [data-toets]").forEach(knop => {
+        const cijfer = (voortgang["toets-" + knop.dataset.toets] || {}).cijfer;
+
+        let plek = knop.querySelector(".prestatie");
+
+        if (!plek) {
+            plek = document.createElement("span");
+            plek.className = "prestatie";
+            knop.appendChild(plek);
+        }
+
+        plek.textContent = cijfer
+            ? "Beste cijfer: " + formatCijfer(cijfer)
+            : "Nog geen cijfer";
     });
 
     let totaal = 0;
@@ -1933,8 +2182,8 @@ kaartVragen.toets = ["wateren", "eilanden", "streken"].flatMap(
 );
 
 // Welke kaart bij welk onderdeel hoort
-const KAART_PROVINCIES = "kaart-nederland.jpeg";
-const KAART_TOETS = "416449b0-5345-49dd-97ad-ba51697f9595.jpg";
+const KAART_PROVINCIES = "afbeeldingen/kaart-nederland.jpeg";
+const KAART_TOETS = "afbeeldingen/kaart-nederland-2.jpeg";
 
 const kaartAfbeeldingen = {
     provincies: KAART_PROVINCIES,
@@ -2022,6 +2271,8 @@ function startKaartQuiz(categorie = "provincies") {
     if (kaartTimer) {
         clearTimeout(kaartTimer);
     }
+
+    zetKaartTerug();
 
     document.getElementById("menu").style.display = "none";
     document.getElementById("quiz").style.display = "none";
@@ -2372,6 +2623,405 @@ function terugNaarMenuVanKaart() {
 document.getElementById("kaartFeedback").textContent = "";
 document.getElementById("kaartAntwoorden").innerHTML = "";
     
+}
+
+
+// ===================== TOETS JEZELF =====================
+// Een echte toets: geen goed/fout of tips tussendoor,
+// aan het eind een cijfer, een overzicht van de fouten en een foutjes-ronde.
+
+const TOETS_DELEN = {
+    deel1: { titel: "Deel 1: Provincies en Hoofdsteden", aantal: 30 },
+    deel2: { titel: "Deel 2: Streken en Wateren", aantal: 33 },
+    alles: { titel: "Alles door elkaar", aantal: 40 }
+};
+
+// Vragen op de kaart in de toets (zonder tips in de vraag)
+const toetsKaartTeksten = {
+    provincies: ["Welke provincie wordt aangegeven?", "Provincie op de kaart"],
+    steden: ["Welke stad wordt aangegeven?", "Stad op de kaart"],
+    wateren: ["Welk water (of welke dijk) wordt aangegeven?", "Water op de kaart"],
+    eilanden: ["Welk Waddeneiland wordt aangegeven?", "Waddeneiland op de kaart"],
+    streken: ["Welke streek of welk land wordt aangegeven?", "Streek op de kaart"]
+};
+
+let toetsDeel = null;
+let toetsLijst = [];
+let toetsIndex = 0;
+let toetsResultaten = [];   // { item, invoer, uitslag }
+let toetsOefenen = false;   // true tijdens de foutjes-ronde
+let toetsOefenFout = [];
+let toetsTimer = null;
+let toetsStopBevestigen = false;
+
+function formatCijfer(cijfer) {
+    return cijfer.toFixed(1).replace(".", ",");
+}
+
+function maakToetsVragen(deel) {
+    const lijst = [];
+
+    function kaartDeel(categorie) {
+        const [instructie, label] = toetsKaartTeksten[categorie];
+        const pool = kaartVragen[categorie].map(v => v.antwoord);
+
+        kaartVragen[categorie].forEach(v => lijst.push({
+            soort: "kaart",
+            kaart: kaartAfbeeldingen[categorie],
+            x: v.x,
+            y: v.y,
+            instructie,
+            vraag: "",
+            label,
+            antwoord: v.antwoord,
+            pool,
+            tip: () => zoekTip("kaart", categorie, v)
+        }));
+    }
+
+    function tekstDeel(categorie) {
+        const quiz = quizzes[categorie];
+        const pool = quiz.vragen.map(v => v.antwoord);
+
+        quiz.vragen.forEach(v => lijst.push({
+            soort: "tekst",
+            instructie: quiz.instructie,
+            vraag: v.vraag,
+            label: quiz.instructie.replace(/:$/, "") + " " + v.vraag,
+            antwoord: v.antwoord,
+            pool,
+            tip: () => zoekTip("tekst", categorie, v)
+        }));
+    }
+
+    if (deel !== "deel2") {
+        kaartDeel("provincies");
+        kaartDeel("steden");
+        tekstDeel("provincies");
+        tekstDeel("steden");
+        tekstDeel("rivieren");
+        tekstDeel("vliegvelden");
+    }
+
+    if (deel !== "deel1") {
+        kaartDeel("wateren");
+        kaartDeel("eilanden");
+        kaartDeel("streken");
+    }
+
+    return shuffle(lijst).slice(0, Math.min(TOETS_DELEN[deel].aantal, lijst.length));
+}
+
+// De kaart wordt gedeeld met de kaartquiz: verplaatsen naar de toets en terug
+function zetKaartInToets() {
+    document.getElementById("toetsKaartPlek")
+        .appendChild(document.getElementById("kaartContainer"));
+}
+
+function zetKaartTerug() {
+    const container = document.getElementById("kaartContainer");
+    const kaartQuiz = document.getElementById("kaartQuiz");
+
+    if (container.parentElement !== kaartQuiz) {
+        kaartQuiz.insertBefore(container, document.getElementById("kaartAntwoorden"));
+    }
+
+    zetKaartZoom(50, 50, 1);
+}
+
+function toonScherm(id) {
+    ["menu", "quiz", "kaartQuiz", "toetsScherm"].forEach(scherm => {
+        document.getElementById(scherm).style.display =
+            scherm === id ? "block" : "none";
+    });
+}
+
+function startToets(deel) {
+    clearTimeout(toetsTimer);
+
+    toetsDeel = deel;
+    toetsLijst = maakToetsVragen(deel);
+    toetsIndex = 0;
+    toetsResultaten = [];
+    toetsOefenen = false;
+    toetsOefenFout = [];
+    toetsStopBevestigen = false;
+    resetReeks();
+
+    zetKaartInToets();
+    toonScherm("toetsScherm");
+
+    document.getElementById("toetsTitel").textContent =
+        "🎓 " + TOETS_DELEN[deel].titel;
+
+    document.getElementById("toetsStopKnop").textContent = "Stoppen";
+
+    toonToetsVraag();
+}
+
+function toonToetsVraag() {
+    if (toetsIndex >= toetsLijst.length) {
+        if (toetsOefenen) {
+            toonFoutjesEinde();
+        } else {
+            toonToetsUitslag();
+        }
+        return;
+    }
+
+    const item = toetsLijst[toetsIndex];
+    const scherm = document.getElementById("toetsScherm");
+    const plek = document.getElementById("toetsKaartPlek");
+    const antwoordenElement = document.getElementById("toetsAntwoorden");
+
+    document.getElementById("toetsFeedback").innerHTML = "";
+    document.getElementById("toetsInstructie").textContent = item.instructie;
+    document.getElementById("toetsVraag").textContent = item.vraag;
+    document.getElementById("toetsVoortgang").textContent =
+        "Vraag " + (toetsIndex + 1) + " van " + toetsLijst.length;
+
+    if (item.soort === "kaart") {
+        const kaart = document.getElementById("nederlandKaart");
+
+        if (kaart.getAttribute("src") !== item.kaart) {
+            kaart.src = item.kaart;
+        }
+
+        zetKaartVerhouding();
+        plek.style.display = "block";
+        scherm.classList.add("met-kaart");
+        document.getElementById("kaartMarkering").style.display = "block";
+
+        zetKaartZoom(item.x, item.y, Math.random() < ZOOM_KANS ? ZOOM_FACTOR : 1);
+    } else {
+        plek.style.display = "none";
+        scherm.classList.remove("met-kaart");
+    }
+
+    if (isSchrijfVraag()) {
+        maakSchrijfveld(antwoordenElement, item.antwoord, verwerkToetsAntwoord, {
+            verbergUitslag: !toetsOefenen,
+            knopTekst: toetsOefenen ? "Controleer" : "Volgende ➜"
+        });
+        return;
+    }
+
+    const fout = shuffle(
+        [...new Set(item.pool)].filter(a => a !== item.antwoord)
+    ).slice(0, 3);
+
+    antwoordenElement.innerHTML = "";
+
+    shuffle([item.antwoord, ...fout]).forEach(antwoord => {
+        const knop = document.createElement("button");
+        knop.type = "button";
+        knop.textContent = antwoord;
+
+        knop.addEventListener("click", function () {
+            const knoppen = antwoordenElement.querySelectorAll("button");
+            const isGoed = antwoord === item.antwoord;
+
+            knoppen.forEach(k => {
+                k.disabled = true;
+                if (toetsOefenen && k.textContent === item.antwoord) {
+                    k.classList.add("correct");
+                }
+            });
+
+            if (toetsOefenen) {
+                knop.classList.add(isGoed ? "correct" : "incorrect");
+            } else {
+                knop.classList.add("gekozen");
+            }
+
+            verwerkToetsAntwoord(isGoed ? "goed" : "fout", antwoord);
+        });
+
+        antwoordenElement.appendChild(knop);
+    });
+}
+
+function verwerkToetsAntwoord(uitslag, invoer) {
+    const item = toetsLijst[toetsIndex];
+    toetsIndex++;
+
+    // Echte toets: niets laten zien, gewoon door
+    if (!toetsOefenen) {
+        toetsResultaten.push({ item, invoer, uitslag });
+        toetsTimer = setTimeout(toonToetsVraag, 350);
+        return;
+    }
+
+    // Foutjes-ronde: net als oefenen, met tips
+    const isGoed = teltAlsGoed(uitslag);
+
+    if (!isGoed) toetsOefenFout.push(item);
+
+    const reeksMelding = werkReeksBij(isGoed);
+
+    toetsTimer = toonAntwoordFeedback(
+        document.getElementById("toetsFeedback"),
+        uitslag,
+        item.antwoord,
+        uitslag === "fout" ? item.tip() : "",
+        reeksMelding,
+        toonToetsVraag
+    );
+}
+
+function verbergToetsVraag() {
+    document.getElementById("toetsKaartPlek").style.display = "none";
+    document.getElementById("toetsScherm").classList.remove("met-kaart");
+    document.getElementById("toetsInstructie").textContent = "";
+    document.getElementById("toetsVoortgang").textContent = "";
+    document.getElementById("toetsStopKnop").textContent = "Terug naar menu";
+    toetsStopBevestigen = false;
+    zetKaartZoom(50, 50, 1);
+}
+
+function toonToetsUitslag() {
+    verbergToetsVraag();
+
+    const totaal = toetsResultaten.length;
+    const aantalGoed = toetsResultaten.filter(r => teltAlsGoed(r.uitslag)).length;
+    const cijfer = Math.round((1 + 9 * aantalGoed / totaal) * 10) / 10;
+
+    // Beste cijfer bewaren
+    const voortgang = leesVoortgang();
+    const sleutel = "toets-" + toetsDeel;
+    const oudCijfer = (voortgang[sleutel] || {}).cijfer || 0;
+    const record = cijfer > oudCijfer;
+
+    if (record) {
+        voortgang[sleutel] = { cijfer };
+        bewaarVoortgang(voortgang);
+        werkMenuBij();
+    }
+
+    let bericht;
+
+    if (cijfer >= 9) {
+        bericht = "👑 Fantastisch Eefje!";
+    } else if (cijfer >= 7.5) {
+        bericht = "🌟 Heel goed gedaan!";
+    } else if (cijfer >= 5.5) {
+        bericht = "👍 Voldoende! Oefen je foutjes nog even.";
+    } else {
+        bericht = "📚 Nog even oefenen, dan lukt het de volgende keer!";
+    }
+
+    if (cijfer >= 8) {
+        vuurwerk();
+        speelGeluid("klaar");
+    }
+
+    document.getElementById("toetsVraag").innerHTML =
+        "<div class='cijfer-label'>Je cijfer</div>" +
+        "<div class='cijfer " + (cijfer >= 5.5 ? "voldoende" : "onvoldoende") + "'>" +
+        formatCijfer(cijfer) + "</div>";
+
+    const fouten = toetsResultaten.filter(r => !teltAlsGoed(r.uitslag));
+
+    let html = "<div class='cijfer-bericht'>" + bericht + "</div>" +
+        "Je had <strong>" + aantalGoed + " van de " + totaal + "</strong> vragen goed." +
+        (record && oudCijfer ? "<div class='medaille-melding'>🏆 Nieuw record! (was " + formatCijfer(oudCijfer) + ")</div>" : "");
+
+    if (fouten.length) {
+        html += "<div class='fouten-overzicht'><strong>Dit ging nog fout:</strong><ul>" +
+            fouten.map(r =>
+                "<li><span class='fout-vraag'>" + r.item.label + "</span>" +
+                "<span class='fout-antwoord'>" +
+                (r.invoer ? "<s>" + maakVeilig(r.invoer) + "</s> → " : "") +
+                "<strong>" + r.item.antwoord + "</strong>" +
+                (r.uitslag === "bijna" ? " <em>(let op de spelling)</em>" : "") +
+                "</span></li>"
+            ).join("") +
+            "</ul></div>";
+    }
+
+    // Knoppen onder het overzicht
+    html += "<div class='toets-eindknoppen'>" + eindKnoppen(
+        fouten.length, "startToetsFoutjes", "herstartToets", "Toets opnieuw maken"
+    ) + "</div>";
+
+    document.getElementById("toetsAntwoorden").innerHTML = "";
+    document.getElementById("toetsFeedback").innerHTML = html;
+
+    toetsOefenFout = fouten.map(r => r.item);
+}
+
+// Getypte tekst veilig tonen
+function maakVeilig(tekst) {
+    const div = document.createElement("div");
+    div.textContent = tekst;
+    return div.innerHTML;
+}
+
+function startToetsFoutjes() {
+    toetsLijst = shuffle(toetsOefenFout);
+    toetsOefenFout = [];
+    toetsIndex = 0;
+    toetsOefenen = true;
+    resetReeks();
+
+    document.getElementById("toetsTitel").textContent = "🔁 Foutjes oefenen";
+    document.getElementById("toetsStopKnop").textContent = "Terug naar menu";
+
+    toonToetsVraag();
+}
+
+function toonFoutjesEinde() {
+    verbergToetsVraag();
+
+    const vraag = document.getElementById("toetsVraag");
+    const feedback = document.getElementById("toetsFeedback");
+
+    if (toetsOefenFout.length === 0) {
+        vraag.textContent = "🎉 Alle foutjes verbeterd!";
+        feedback.innerHTML = "Super Eefje! Probeer de toets nog eens voor een hoger cijfer.";
+        vuurwerk();
+        speelGeluid("klaar");
+    } else {
+        vraag.textContent = "Bijna!";
+        feedback.innerHTML = "Nog <strong>" + toetsOefenFout.length + "</strong> " +
+            (toetsOefenFout.length === 1 ? "foutje" : "foutjes") + " over. Nog één rondje?";
+    }
+
+    document.getElementById("toetsAntwoorden").innerHTML = "";
+    feedback.innerHTML += "<div class='toets-eindknoppen'>" + eindKnoppen(
+        toetsOefenFout.length, "startToetsFoutjes", "herstartToets", "Toets opnieuw maken"
+    ) + "</div>";
+}
+
+function herstartToets() {
+    startToets(toetsDeel);
+}
+
+// Tijdens de toets twee keer klikken om te stoppen
+function stopToets() {
+    const bezig = !toetsOefenen && toetsIndex < toetsLijst.length;
+
+    if (bezig && !toetsStopBevestigen) {
+        toetsStopBevestigen = true;
+        document.getElementById("toetsStopKnop").textContent =
+            "Echt stoppen? Klik nog een keer";
+
+        setTimeout(function () {
+            if (toetsStopBevestigen) {
+                toetsStopBevestigen = false;
+                document.getElementById("toetsStopKnop").textContent = "Stoppen";
+            }
+        }, 3000);
+        return;
+    }
+
+    clearTimeout(toetsTimer);
+    toetsStopBevestigen = false;
+
+    zetKaartTerug();
+    document.getElementById("toetsAntwoorden").innerHTML = "";
+    document.getElementById("toetsFeedback").innerHTML = "";
+    toonScherm("menu");
 }
 
 document.getElementById("nederlandKaart")
