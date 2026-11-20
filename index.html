@@ -460,6 +460,293 @@ h1 {
         margin: 6px 0;
     }
 }
+
+/* ===== Sterren, medailles, reeks en tips ===== */
+
+#menu {
+    position: relative;
+}
+
+.geluid-knop {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: auto;
+    margin: 0;
+    padding: 6px 12px;
+    font-size: 0.85em;
+    background: #e2e8f0;
+    color: #334155;
+    border-radius: 999px;
+}
+
+.geluid-knop:hover {
+    background: #cbd5e1;
+    box-shadow: none;
+}
+
+#menu button[data-onderdeel] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+}
+
+.prestatie {
+    flex-shrink: 0;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.leeg {
+    opacity: 0.35;
+    filter: grayscale(1);
+}
+
+.sterren-totaal {
+    margin: 4px 0 2px;
+    font-size: 1.05em;
+}
+
+.legenda {
+    margin: 0 0 14px;
+    font-size: 0.85em;
+    color: #64748b;
+}
+
+.tip {
+    margin: 10px auto 0;
+    max-width: 520px;
+    padding: 10px 14px;
+    background: #fff8e1;
+    border: 2px solid #ffd54f;
+    border-radius: 12px;
+    color: #5d4300;
+    font-size: 0.85em;
+    font-weight: normal;
+    text-align: left;
+    line-height: 1.4;
+}
+
+.verder-knop {
+    display: block;
+    width: 100%;
+    margin: 10px 0 0;
+}
+
+.reeks-melding {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff6a00, #ff3d00);
+    color: white;
+    font-weight: bold;
+    animation: reeksPop 0.5s ease;
+}
+
+@keyframes reeksPop {
+    0% { transform: scale(0.4); opacity: 0; }
+    70% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+.sterren-groot {
+    margin: 10px 0 4px;
+    font-size: 2.2em;
+    letter-spacing: 4px;
+    animation: reeksPop 0.6s ease;
+}
+
+.medaille-melding {
+    margin: 6px 0;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.hint {
+    margin: 6px 0;
+    font-size: 0.85em;
+    font-weight: normal;
+    color: #475569;
+}
+
+#answers .volle-breedte,
+#kaartAntwoorden .volle-breedte {
+    grid-column: 1 / -1;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .geluid-knop {
+        top: 8px;
+        right: 8px;
+        padding: 4px 10px;
+        font-size: 0.75em;
+    }
+
+    #menu h1 {
+        margin-top: 26px;
+    }
+
+    .sterren-groot {
+        font-size: 1.8em;
+    }
+}
+
+/* ===== Compact menu met tegels ===== */
+
+#menu h1 {
+    margin-bottom: 4px;
+}
+
+.menu-label {
+    margin: 10px 0 6px;
+    font-size: 0.95em;
+}
+
+#menu .modus-keuze {
+    margin: 0 0 6px;
+}
+
+#menu .modus-keuze button {
+    padding: 8px 6px;
+    font-size: 0.95em;
+}
+
+.menu-raster {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+}
+
+#menu .menu-raster button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    margin: 0;
+    padding: 10px 8px;
+    min-height: 0;
+    font-size: 0.95em;
+    line-height: 1.2;
+    text-align: center;
+    border-radius: 14px;
+}
+
+#menu .menu-raster .tegel-breed {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.menu-raster.drie {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.heel {
+    white-space: nowrap;
+}
+
+.tegel-icoon {
+    font-size: 1.5em;
+    line-height: 1;
+}
+
+.tegel-breed .tegel-icoon {
+    font-size: 1.2em;
+}
+
+#menu .prestatie {
+    font-size: 0.75em;
+    letter-spacing: 0;
+}
+
+.tegel-breed .prestatie {
+    margin-left: 4px;
+}
+
+.menu-kop {
+    margin: 18px 0 8px;
+    padding-top: 14px;
+    font-size: 1.15em;
+}
+
+.sterren-totaal {
+    margin: 0;
+    font-size: 0.95em;
+}
+
+.legenda {
+    margin: 2px 0 4px;
+    font-size: 0.75em;
+}
+
+@media (max-width: 600px) {
+    .menu-raster,
+    .menu-raster.drie {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    #menu .menu-raster button {
+        padding: 8px 6px;
+        font-size: 0.85em;
+    }
+
+    #menu .modus-keuze button {
+        padding: 8px 2px;
+        font-size: 0.8em;
+    }
+
+    /* Een losse laatste tegel vult de hele rij */
+    #menu .menu-raster button:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+    }
+
+    /* 'Hele toets' is op de telefoon een gewone tegel (2 x 2) */
+    #menu .menu-raster .tegel-breed {
+        grid-column: auto !important;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .tegel-breed .tegel-icoon {
+        font-size: 1.3em;
+    }
+
+    .tegel-breed .prestatie {
+        margin-left: 0;
+    }
+
+    /* Geluidsknop: alleen het icoontje, zodat hij niet over de titel valt */
+    .geluid-tekst {
+        display: none;
+    }
+
+    .geluid-knop {
+        padding: 6px 9px;
+        font-size: 1em;
+    }
+
+    #menu h1 {
+        margin-top: 4px;
+        padding: 0 36px;
+    }
+
+    .tegel-icoon {
+        font-size: 1.3em;
+    }
+
+    .menu-kop {
+        margin-top: 14px;
+        padding-top: 10px;
+        font-size: 1.05em;
+    }
+}
 </style>
 
 </head>
@@ -467,9 +754,19 @@ h1 {
 
 <div id="menu" class="quiz-box">
 
+    <button type="button" id="geluidKnop" class="geluid-knop" onclick="wisselGeluid()">
+        🔊 Geluid aan
+    </button>
+
     <h1>🇳🇱 Eefjes Topografie</h1>
 
-    <p>Hoe wil je antwoorden?</p>
+    <p id="sterrenTotaal" class="sterren-totaal"></p>
+    <p class="legenda">
+        <span class="heel">Alles goed = medaille:</span>
+        <span class="heel">🥉 kiezen · 🥈 afwisselend · 🥇 schrijven</span>
+    </p>
+
+    <p class="menu-label">Hoe wil je antwoorden?</p>
 
     <div class="modus-keuze">
         <button type="button" data-modus="kiezen" onclick="kiesModus('kiezen')">
@@ -483,45 +780,51 @@ h1 {
         </button>
     </div>
 
-    <p>Kies een onderdeel:</p>
+    <p class="menu-label">Kies een onderdeel:</p>
 
-    <button onclick="startQuiz('provincies')">
-        Provincies & Hoofdsteden
-    </button>
-
-    <button onclick="startKaartQuiz()">
-        Kaart van Nederland
-    </button>
-
-    <button onclick="startQuiz('steden')">
-        Grote Steden
-    </button>
-
-    <button onclick="startQuiz('vliegvelden')">
-        Vliegvelden
-    </button>
-
-    <button onclick="startQuiz('rivieren')">
-        Grote Rivieren
-    </button>
+    <div class="menu-raster">
+        <button onclick="startQuiz('provincies')" data-onderdeel="tekst-provincies">
+            <span class="tegel-icoon">🏛️</span>
+            <span class="tegel-naam">Provincies & Hoofdsteden</span>
+        </button>
+        <button onclick="startKaartQuiz()" data-onderdeel="kaart-provincies,kaart-steden">
+            <span class="tegel-icoon">🗺️</span>
+            <span class="tegel-naam">Kaart van Nederland</span>
+        </button>
+        <button onclick="startQuiz('steden')" data-onderdeel="tekst-steden">
+            <span class="tegel-icoon">🏙️</span>
+            <span class="tegel-naam">Grote Steden</span>
+        </button>
+        <button onclick="startQuiz('vliegvelden')" data-onderdeel="tekst-vliegvelden">
+            <span class="tegel-icoon">✈️</span>
+            <span class="tegel-naam">Vliegvelden</span>
+        </button>
+        <button onclick="startQuiz('rivieren')" data-onderdeel="tekst-rivieren">
+            <span class="tegel-icoon">🌊</span>
+            <span class="tegel-naam">Grote Rivieren</span>
+        </button>
+    </div>
 
     <h2 class="menu-kop">📝 Toets: Streken en wateren</h2>
 
-    <button onclick="startKaartQuiz('wateren')">
-        Wateren
-    </button>
-
-    <button onclick="startKaartQuiz('eilanden')">
-        Waddeneilanden
-    </button>
-
-    <button onclick="startKaartQuiz('streken')">
-        Streken
-    </button>
-
-    <button onclick="startKaartQuiz('toets')">
-        ⭐ Hele toets oefenen
-    </button>
+    <div class="menu-raster drie">
+        <button onclick="startKaartQuiz('wateren')" data-onderdeel="kaart-wateren">
+            <span class="tegel-icoon">💧</span>
+            <span class="tegel-naam">Wateren</span>
+        </button>
+        <button onclick="startKaartQuiz('eilanden')" data-onderdeel="kaart-eilanden">
+            <span class="tegel-icoon">🏝️</span>
+            <span class="tegel-naam">Waddeneilanden</span>
+        </button>
+        <button onclick="startKaartQuiz('streken')" data-onderdeel="kaart-streken">
+            <span class="tegel-icoon">🌳</span>
+            <span class="tegel-naam">Streken</span>
+        </button>
+        <button onclick="startKaartQuiz('toets')" data-onderdeel="kaart-toets" class="tegel-breed">
+            <span class="tegel-icoon">⭐</span>
+            <span class="tegel-naam">Hele toets oefenen</span>
+        </button>
+    </div>
 
 </div>
 
@@ -539,7 +842,7 @@ h1 {
 
     <div id="score">
         Goed: <span id="correct">0</span> |
-        Fout: <span id="wrong">0</span>
+        Fout: <span id="wrong">0</span><span class="reeks-teller"></span>
     </div>
 
     <br>
@@ -575,7 +878,7 @@ h1 {
     <div id="kaartScore">
         Vraag: <span id="kaartVoortgang">1</span> |
         Goed: <span id="kaartGoed">0</span> |
-        Fout: <span id="kaartFout">0</span>
+        Fout: <span id="kaartFout">0</span><span class="reeks-teller"></span>
     </div>
 
     <button
@@ -755,6 +1058,415 @@ function wachttijd(uitslag) {
     return uitslag === "goed" ? 1800 : 3000;
 }
 
+// ===== Geluidjes =====
+
+let geluidAan = true;
+let audioContext = null;
+
+function speelGeluid(soort) {
+    if (!geluidAan) return;
+
+    try {
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioContext.state === "suspended") {
+            audioContext.resume();
+        }
+    } catch (e) {
+        return;
+    }
+
+    const nu = audioContext.currentTime;
+
+    function toon(frequentie, start, duur, vorm = "sine", volume = 0.15) {
+        const oscillator = audioContext.createOscillator();
+        const versterker = audioContext.createGain();
+
+        oscillator.type = vorm;
+        oscillator.frequency.value = frequentie;
+
+        versterker.gain.setValueAtTime(0.0001, nu + start);
+        versterker.gain.exponentialRampToValueAtTime(volume, nu + start + 0.02);
+        versterker.gain.exponentialRampToValueAtTime(0.0001, nu + start + duur);
+
+        oscillator.connect(versterker);
+        versterker.connect(audioContext.destination);
+
+        oscillator.start(nu + start);
+        oscillator.stop(nu + start + duur + 0.05);
+    }
+
+    if (soort === "goed") {
+        toon(784, 0, 0.15);
+        toon(1047, 0.1, 0.3);
+    } else if (soort === "reeks") {
+        [523, 659, 784, 1047].forEach((f, i) => toon(f, i * 0.09, 0.3));
+    } else if (soort === "fout") {
+        toon(220, 0, 0.3, "triangle", 0.12);
+        toon(185, 0.15, 0.4, "triangle", 0.12);
+    } else if (soort === "klaar") {
+        [523, 659, 784, 1047, 784, 1047].forEach(
+            (f, i) => toon(f, i * 0.13, 0.35, "triangle", 0.15)
+        );
+    }
+}
+
+function wisselGeluid() {
+    geluidAan = !geluidAan;
+    werkGeluidKnopBij();
+
+    try {
+        localStorage.setItem("geluidAan", geluidAan ? "ja" : "nee");
+    } catch (e) {
+        // geen opslag beschikbaar
+    }
+
+    if (geluidAan) speelGeluid("goed");
+}
+
+function werkGeluidKnopBij() {
+    document.getElementById("geluidKnop").innerHTML = geluidAan
+        ? "🔊<span class='geluid-tekst'> Geluid aan</span>"
+        : "🔇<span class='geluid-tekst'> Geluid uit</span>";
+}
+
+// ===== Reeks: zoveel goed op rij =====
+
+let reeks = 0;
+const REEKS_MIJLPALEN = [3, 5, 10, 15, 20, 25, 30];
+
+// Werkt de reeks bij, speelt een geluidje en geeft een melding terug
+function werkReeksBij(isGoed) {
+    reeks = isGoed ? reeks + 1 : 0;
+
+    const mijlpaal = isGoed && (
+        REEKS_MIJLPALEN.includes(reeks) ||
+        (reeks > 30 && reeks % 10 === 0)
+    );
+
+    speelGeluid(isGoed ? (mijlpaal ? "reeks" : "goed") : "fout");
+
+    if (mijlpaal && reeks >= 10 && typeof confetti === "function") {
+        confetti({ particleCount: 70, spread: 70, origin: { y: 0.7 } });
+    }
+
+    toonReeks();
+
+    return mijlpaal
+        ? "<div class='reeks-melding'>🔥 " + reeks + " goed op rij!</div>"
+        : "";
+}
+
+function toonReeks() {
+    document.querySelectorAll(".reeks-teller").forEach(element => {
+        element.textContent = reeks >= 2 ? " | 🔥 " + reeks : "";
+    });
+}
+
+function resetReeks() {
+    reeks = 0;
+    toonReeks();
+}
+
+// ===== Feedback na een antwoord =====
+// Goed: na even wachten vanzelf verder.
+// Fout of bijna: tip laten zien en wachten op de knop "Verder".
+function toonAntwoordFeedback(element, uitslag, juist, tip, reeksMelding, volgende) {
+    let html = feedbackTekst(uitslag, juist) + reeksMelding;
+
+    if (teltAlsGoed(uitslag)) {
+        element.innerHTML = html;
+        return setTimeout(volgende, reeksMelding ? 2200 : 1500);
+    }
+
+    if (tip) {
+        html += "<div class='tip'>💡 " + tip + "</div>";
+    }
+
+    element.innerHTML = html;
+
+    const knop = document.createElement("button");
+    knop.type = "button";
+    knop.className = "verder-knop";
+    knop.textContent = "Verder ➜";
+    knop.disabled = true;
+
+    knop.addEventListener("click", function () {
+        knop.disabled = true;
+        volgende();
+    });
+
+    element.appendChild(knop);
+
+    // Even wachten, zodat dezelfde Enter-toets niet meteen doorklikt
+    setTimeout(function () {
+        knop.disabled = false;
+        knop.focus({ preventScroll: true });
+        knop.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }, 600);
+
+    return null;
+}
+
+// ===== Ezelsbruggetjes =====
+
+const provincieTips = {
+    "Groningen": "Groningen ligt helemaal rechtsboven in Nederland. De hoofdstad heet ook Groningen.",
+    "Friesland": "Friesland ligt linksboven, achter de Waddenzee. De hoofdstad is Leeuwarden.",
+    "Drenthe": "Drenthe ligt onder Groningen en is de enige provincie in het noorden zonder zee. De hoofdstad is Assen.",
+    "Overijssel": "Overijssel betekent 'over de IJssel': het ligt aan de oostkant van die rivier. De hoofdstad is Zwolle.",
+    "Flevoland": "Flevoland is de jongste provincie: het land is uit het water gehaald! De hoofdstad is Lelystad.",
+    "Gelderland": "Gelderland is de grootste provincie, met de Veluwe. De hoofdstad is Arnhem.",
+    "Utrecht": "Utrecht is een kleine provincie precies in het midden van het land. De hoofdstad heet ook Utrecht.",
+    "Noord-Holland": "Noord-Holland is het smalle stuk land tussen de Noordzee en het IJsselmeer. De hoofdstad is Haarlem (niet Amsterdam!).",
+    "Zuid-Holland": "Zuid-Holland ligt aan zee, onder Noord-Holland, met Rotterdam en Den Haag. De hoofdstad is Den Haag.",
+    "Zeeland": "Zeeland ligt linksonder en bestaat uit eilanden en veel water. De hoofdstad is Middelburg.",
+    "Noord-Brabant": "Noord-Brabant is de brede provincie onderaan, boven België. De hoofdstad is 's-Hertogenbosch (Den Bosch).",
+    "Limburg": "Limburg is het lange 'staartje' helemaal rechtsonder. De hoofdstad is Maastricht."
+};
+
+const kaartTips = {
+    // Wateren
+    "Noordzee": "De Noordzee is de grote zee aan de westkant van Nederland. Daar ga je naar het strand!",
+    "Waddenzee": "De Waddenzee ligt tussen de Waddeneilanden en het vasteland. Bij eb kun je er soms doorheen lopen: wadlopen!",
+    "Afsluitdijk": "De Afsluitdijk is de lange dijk die de Waddenzee 'afsluit' van het IJsselmeer. Je kunt eroverheen rijden van Noord-Holland naar Friesland.",
+    "IJsselmeer": "Het IJsselmeer is het grote meer achter de Afsluitdijk. De IJssel stroomt erin, vandaar de naam!",
+    "Markermeer": "Het Markermeer is het kleinere meer onder het IJsselmeer, vlak bij Amsterdam. Het is genoemd naar het eiland Marken.",
+    "Rijn": "De Rijn komt uit Duitsland ons land binnen en splitst zich dan in de Waal, de Nederrijn en de IJssel.",
+    "IJssel": "De IJssel stroomt naar het noorden, langs Deventer en Zwolle, en komt uit in het IJsselmeer.",
+    "Nederrijn": "De Nederrijn stroomt langs Arnhem naar het westen. Verderop heet hij de Lek.",
+    "Lek": "De Lek is het vervolg van de Nederrijn en stroomt onder Utrecht door richting Rotterdam.",
+    "Nieuwe Waterweg": "De Nieuwe Waterweg is gegraven van Rotterdam naar de zee bij Hoek van Holland. Grote schepen varen hierlangs naar de haven.",
+    "Maas": "De Maas komt uit België binnen bij Maastricht (Maas-tricht!) en stroomt door Limburg naar het noorden.",
+    "Waal": "De Waal is de grootste tak van de Rijn en stroomt langs Nijmegen naar het westen.",
+    "Amsterdam-Rijnkanaal": "De naam zegt het al: dit kanaal loopt van Amsterdam naar de Rijn, langs Utrecht.",
+    "Noordzeekanaal": "De naam zegt het al: dit kanaal loopt van de Noordzee (bij IJmuiden) naar Amsterdam.",
+    "Oosterschelde": "In Zeeland liggen twee Scheldes. De Oosterschelde is de bovenste, tussen de eilanden in.",
+    "Westerschelde": "In Zeeland liggen twee Scheldes. De Westerschelde is de onderste, vlak bij België. Schepen varen erover naar Antwerpen.",
+
+    // Streken
+    "Twente": "Twente is het oosten van Overijssel, rond Enschede en Hengelo.",
+    "Veluwe": "De Veluwe is een groot bos- en heidegebied in Gelderland, met wilde zwijnen en herten.",
+    "Haarlemmermeer": "Hier lag vroeger een groot meer bij Haarlem. Het is drooggemalen en nu ligt Schiphol er!",
+    "Rijnmond": "Rijnmond is het gebied rond Rotterdam, waar de rivieren in zee uitkomen: de 'mond' van de Rijn.",
+    "Randstad": "De Randstad is de 'rand' van grote steden: Amsterdam, Den Haag, Rotterdam en Utrecht.",
+    "Biesbosch": "De Biesbosch is een natuurgebied vol water en riet bij Dordrecht. Je kunt er met een bootje varen en bevers zien.",
+    "Zeeuws-Vlaanderen": "Zeeuws-Vlaanderen is het stuk van Zeeland onder de Westerschelde, tegen België aan.",
+    "Noordoostpolder": "De Noordoostpolder ligt in het noordoosten van Flevoland, rond Emmeloord. Het is een polder: land dat vroeger water was.",
+    "Achterhoek": "De Achterhoek is het oosten van Gelderland, helemaal 'achter in de hoek' tegen Duitsland aan.",
+    "West-Friesland": "Let op: West-Friesland ligt niet in Friesland, maar bovenin Noord-Holland. Denk aan Hoorn en Enkhuizen.",
+    "Duitsland": "Duitsland is ons buurland aan de oostkant (rechts op de kaart).",
+    "België": "België is ons buurland aan de zuidkant (onder op de kaart)."
+};
+
+const hoofdsteden = {
+    "Groningen": "Groningen", "Friesland": "Leeuwarden", "Drenthe": "Assen",
+    "Overijssel": "Zwolle", "Flevoland": "Lelystad", "Gelderland": "Arnhem",
+    "Utrecht": "Utrecht", "Noord-Holland": "Haarlem", "Zuid-Holland": "Den Haag",
+    "Zeeland": "Middelburg", "Noord-Brabant": "'s-Hertogenbosch", "Limburg": "Maastricht"
+};
+
+const stadTips = {
+    "Amsterdam": "Amsterdam is de hoofdstad van heel Nederland! Het ligt in Noord-Holland, aan het IJ.",
+    "Rotterdam": "Rotterdam heeft de grootste haven van Europa en ligt in Zuid-Holland, vlak bij de zee.",
+    "Eindhoven": "Eindhoven is de grootste stad van Noord-Brabant en ligt in het zuiden van die provincie.",
+    "Den Haag": "Den Haag is de hoofdstad van Zuid-Holland. Hier werken de regering en de koning. Het ligt aan zee.",
+    "Maastricht": "Maastricht ligt helemaal onderaan in Limburg, aan de Maas (Maas-tricht!)."
+};
+
+const rivierTips = {
+    "De Maas": "Maas-tricht: de naam van de rivier zit al in de naam van de stad!",
+    "De Waal": "Nijmegen is de oudste stad van Nederland en ligt aan de Waal.",
+    "De Nederrijn": "Arnhem ligt aan de Nederrijn, net onder de Veluwe.",
+    "De IJssel": "Deventer ligt aan de IJssel, in Overijssel.",
+    "De Lek": "Vianen ligt aan de Lek, net onder de stad Utrecht."
+};
+
+const WADDEN_RIJ = ["Texel", "Vlieland", "Terschelling", "Ameland", "Schiermonnikoog"];
+
+function stadTip(stad) {
+    if (stadTips[stad]) return stadTips[stad];
+
+    const provincie = Object.keys(hoofdsteden).find(
+        p => hoofdsteden[p] === stad
+    );
+
+    return provincie
+        ? stad + " is de hoofdstad van " + provincie + ". " +
+            (provincieTips[provincie] || "").replace(/ De hoofdstad.*$/, "")
+        : "";
+}
+
+// soort: "tekst" of "kaart"
+function zoekTip(soort, categorie, vraag) {
+    if (soort === "kaart") {
+        const groep = vraag.soort || categorie;
+
+        if (groep === "eilanden") {
+            const nummer = WADDEN_RIJ.indexOf(vraag.antwoord) + 1;
+            return "Onthoud <strong>TV-TAS</strong>: van links naar rechts " +
+                "Texel, Vlieland, Terschelling, Ameland, Schiermonnikoog. " +
+                vraag.antwoord + " is nummer " + nummer + ".";
+        }
+
+        if (groep === "steden") return stadTip(vraag.antwoord);
+
+        return provincieTips[vraag.antwoord] || kaartTips[vraag.antwoord] || "";
+    }
+
+    if (categorie === "provincies") {
+        return provincieTips[vraag.vraag] || "";
+    }
+
+    if (categorie === "steden") {
+        return vraag.vraag + " ligt in " + vraag.antwoord + ". " +
+            (provincieTips[vraag.antwoord] || "");
+    }
+
+    if (categorie === "rivieren") {
+        return rivierTips[vraag.vraag] || "";
+    }
+
+    if (categorie === "vliegvelden") {
+        return vraag.vraag.includes(vraag.antwoord)
+            ? "Kijk goed: de naam van de plaats zit al in de naam van het vliegveld!"
+            : "Schiphol is het grootste vliegveld van Nederland en ligt vlak bij Amsterdam.";
+    }
+
+    return "";
+}
+
+// ===== Sterren en medailles =====
+
+const VOORTGANG_SLEUTEL = "topografieVoortgang";
+const MEDAILLES = ["", "🥉", "🥈", "🥇"];
+const MEDAILLE_NAMEN = ["", "bronzen", "zilveren", "gouden"];
+
+function leesVoortgang() {
+    try {
+        return JSON.parse(localStorage.getItem(VOORTGANG_SLEUTEL)) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function bewaarVoortgang(voortgang) {
+    try {
+        localStorage.setItem(VOORTGANG_SLEUTEL, JSON.stringify(voortgang));
+    } catch (e) {
+        // geen opslag beschikbaar: dan wordt het niet onthouden
+    }
+}
+
+// 100% = 3 sterren, 80% = 2, 50% = 1
+function sterrenVoor(percentage) {
+    if (percentage === 100) return 3;
+    if (percentage >= 80) return 2;
+    if (percentage >= 50) return 1;
+    return 0;
+}
+
+// Medaille hangt af van hoe ze antwoordde
+function medailleVoorModus() {
+    return { kiezen: 1, afwisselend: 2, schrijven: 3 }[antwoordModus] || 1;
+}
+
+function sterrenHtml(aantal) {
+    return "⭐".repeat(aantal) +
+        "<span class='leeg'>" + "⭐".repeat(3 - aantal) + "</span>";
+}
+
+function registreerResultaat(onderdeel, aantalGoed, totaal) {
+    const percentage = Math.round((aantalGoed / totaal) * 100);
+    const sterren = sterrenVoor(percentage);
+    const medaille = sterren === 3 ? medailleVoorModus() : 0;
+
+    const voortgang = leesVoortgang();
+    const oud = voortgang[onderdeel] || { sterren: 0, medaille: 0 };
+
+    voortgang[onderdeel] = {
+        sterren: Math.max(oud.sterren || 0, sterren),
+        medaille: Math.max(oud.medaille || 0, medaille)
+    };
+
+    bewaarVoortgang(voortgang);
+    werkMenuBij();
+
+    return {
+        sterren,
+        medaille,
+        nieuweMedaille: medaille > (oud.medaille || 0)
+    };
+}
+
+function resultaatHtml(resultaat) {
+    let html = "<div class='sterren-groot'>" + sterrenHtml(resultaat.sterren) + "</div>";
+
+    if (resultaat.medaille) {
+        html += "<div class='medaille-melding'>" +
+            MEDAILLES[resultaat.medaille] + " " +
+            (resultaat.nieuweMedaille ? "Nieuw! Je hebt een " : "Weer een ") +
+            MEDAILLE_NAMEN[resultaat.medaille] + " medaille" +
+            (resultaat.nieuweMedaille ? " verdiend!" : "!") +
+            "</div>";
+    }
+
+    if (resultaat.sterren < 3) {
+        html += "<div class='hint'>Haal alles goed voor 3 sterren en een medaille!</div>";
+    } else if (resultaat.medaille === 1) {
+        html += "<div class='hint'>Probeer nu 🔀 Afwisselend voor zilver, of ✏️ Zelf schrijven voor goud!</div>";
+    } else if (resultaat.medaille === 2) {
+        html += "<div class='hint'>Probeer nu ✏️ Zelf schrijven voor goud!</div>";
+    }
+
+    return html;
+}
+
+function werkMenuBij() {
+    const voortgang = leesVoortgang();
+
+    document.querySelectorAll("#menu [data-onderdeel]").forEach(knop => {
+        const delen = knop.dataset.onderdeel.split(",");
+
+        const sterren = Math.min(...delen.map(d => (voortgang[d] || {}).sterren || 0));
+        const medaille = Math.min(...delen.map(d => (voortgang[d] || {}).medaille || 0));
+
+        let plek = knop.querySelector(".prestatie");
+
+        if (!plek) {
+            plek = document.createElement("span");
+            plek.className = "prestatie";
+            knop.appendChild(plek);
+        }
+
+        plek.innerHTML = sterrenHtml(sterren) + (medaille ? " " + MEDAILLES[medaille] : "");
+    });
+
+    let totaal = 0;
+    Object.values(voortgang).forEach(o => { totaal += o.sterren || 0; });
+
+    document.getElementById("sterrenTotaal").innerHTML = totaal
+        ? "Je hebt al <strong>" + totaal + " ⭐</strong> verzameld!"
+        : "Verdien sterren en medailles! ⭐";
+}
+
+// Knoppen onder het eindscherm
+function eindKnoppen(aantalFoutjes, herhaalFunctie, opnieuwFunctie, opnieuwTekst) {
+    let html = "";
+
+    if (aantalFoutjes > 0) {
+        html += "<button type='button' class='volle-breedte' onclick='" + herhaalFunctie + "()'>" +
+            "🔁 Oefen je foutjes (" + aantalFoutjes + ")</button>";
+    }
+
+    html += "<button type='button' class='volle-breedte" +
+        (aantalFoutjes > 0 ? " secondary-button" : "") +
+        "' onclick='" + opnieuwFunctie + "()'>" + opnieuwTekst + "</button>";
+
+    return html;
+}
+
 const quizzes = {
     provincies: {
         titel: "Provincies & Hoofdsteden",
@@ -832,6 +1544,9 @@ let vraagNummer = 0;
 let goed = 0;
 let fout = 0;
 let volgendeVraagTimer = null;
+let huidigType = null;
+let fouteVragen = [];
+let isHerhaalRonde = false;
 
 function shuffle(array) {
     const kopie = [...array];
@@ -882,10 +1597,14 @@ function startQuiz(type) {
         volgendeVraagTimer = null;
     }
 
+    huidigType = type;
     huidigeVragen = shuffle(huidigeCategorie.vragen);
     vraagNummer = 0;
     goed = 0;
     fout = 0;
+    fouteVragen = [];
+    isHerhaalRonde = false;
+    resetReeks();
 
     document.getElementById("menu").style.display = "none";
     document.getElementById("quiz").style.display = "block";
@@ -989,55 +1708,110 @@ function controleerAntwoord(gekozenAntwoord, gekozenKnop) {
 }
 
 function verwerkAntwoord(uitslag) {
-    document.getElementById("feedback").innerHTML =
-        feedbackTekst(uitslag, huidigeVraag.antwoord);
+    const isGoed = teltAlsGoed(uitslag);
 
-    if (teltAlsGoed(uitslag)) {
+    if (isGoed) {
         goed++;
     } else {
         fout++;
+        fouteVragen.push(huidigeVraag);
     }
 
     document.getElementById("correct").textContent = goed;
     document.getElementById("wrong").textContent = fout;
 
+    const reeksMelding = werkReeksBij(isGoed);
+    const tip = uitslag === "fout"
+        ? zoekTip("tekst", huidigType, huidigeVraag)
+        : "";
+
     vraagNummer++;
 
-    volgendeVraagTimer = setTimeout(function () {
-        nieuweVraag();
-    }, wachttijd(uitslag));
+    volgendeVraagTimer = toonAntwoordFeedback(
+        document.getElementById("feedback"),
+        uitslag,
+        huidigeVraag.antwoord,
+        tip,
+        reeksMelding,
+        nieuweVraag
+    );
 }
 
 function toonEindscore() {
     const totaal = huidigeVragen.length;
+    const vraagElement = document.getElementById("province");
+    const antwoordenElement = document.getElementById("answers");
+    const feedbackElement = document.getElementById("feedback");
+
+    // Einde van een foutjes-ronde
+    if (isHerhaalRonde) {
+        if (fouteVragen.length === 0) {
+            vraagElement.textContent = "🎉 Alle foutjes verbeterd!";
+            feedbackElement.innerHTML = "Super Eefje! Nu ken je ze allemaal.";
+            vuurwerk();
+            speelGeluid("klaar");
+        } else {
+            vraagElement.textContent = "Bijna!";
+            feedbackElement.innerHTML =
+                "Nog <strong>" + fouteVragen.length + "</strong> " +
+                (fouteVragen.length === 1 ? "foutje" : "foutjes") +
+                " over. Nog één rondje?";
+        }
+
+        antwoordenElement.innerHTML = eindKnoppen(
+            fouteVragen.length, "startHerhaalRonde", "herstartQuiz", "Hele quiz opnieuw"
+        );
+        return;
+    }
+
     const percentage = Math.round((goed / totaal) * 100);
+    const resultaat = registreerResultaat("tekst-" + huidigType, goed, totaal);
 
     let beoordeling;
 
     if (percentage === 100) {
-beoordeling = "👑 Fantastisch Eefje! Alles goed!";
-vuurwerk();
-} else if (percentage >= 80) {
-        beoordeling = "🥇 Heel goed gedaan Eefje!";
+        beoordeling = "👑 Fantastisch Eefje! Alles goed!";
+        vuurwerk();
+    } else if (percentage >= 80) {
+        beoordeling = "🌟 Heel goed gedaan Eefje!";
     } else if (percentage >= 60) {
-        beoordeling = "🥈 Goed bezig!";
+        beoordeling = "👍 Goed bezig!";
     } else {
         beoordeling = "📚 Nog een keer oefenen samen met papa of mama!";
     }
 
-    document.getElementById("province").textContent = "Quiz afgerond";
-    document.getElementById("answers").innerHTML =
-        "<button type='button' onclick='herstartQuiz()'>" +
-        "Opnieuw proberen" +
-        "</button>";
+    if (percentage >= 80) speelGeluid("klaar");
 
-    document.getElementById("feedback").innerHTML =
+    vraagElement.textContent = "Quiz afgerond";
+
+    antwoordenElement.innerHTML = eindKnoppen(
+        fouteVragen.length, "startHerhaalRonde", "herstartQuiz", "Opnieuw proberen"
+    );
+
+    feedbackElement.innerHTML =
         beoordeling +
-        "<br><br>Je had <strong>" +
-        goed +
-        " van de " +
-        totaal +
-        "</strong> vragen goed.";
+        "<br>Je had <strong>" + goed + " van de " + totaal +
+        "</strong> vragen goed." +
+        resultaatHtml(resultaat);
+}
+
+// Alleen de vragen die fout gingen nog een keer
+function startHerhaalRonde() {
+    huidigeVragen = shuffle(fouteVragen);
+    fouteVragen = [];
+    isHerhaalRonde = true;
+    vraagNummer = 0;
+    goed = 0;
+    fout = 0;
+
+    document.getElementById("titel").textContent =
+        huidigeCategorie.titel + " – 🔁 foutjes";
+
+    document.getElementById("correct").textContent = "0";
+    document.getElementById("wrong").textContent = "0";
+    document.getElementById("feedback").textContent = "";
+
+    nieuweVraag();
 }
 
 function herstartQuiz() {
@@ -1045,7 +1819,11 @@ function herstartQuiz() {
     vraagNummer = 0;
     goed = 0;
     fout = 0;
+    fouteVragen = [];
+    isHerhaalRonde = false;
+    resetReeks();
 
+    document.getElementById("titel").textContent = huidigeCategorie.titel;
     document.getElementById("correct").textContent = "0";
     document.getElementById("wrong").textContent = "0";
     document.getElementById("feedback").textContent = "";
@@ -1205,6 +1983,8 @@ let kaartVraagNummer = 0;
 let kaartGoed = 0;
 let kaartFout = 0;
 let kaartTimer = null;
+let kaartFouteVragen = [];
+let kaartHerhaalRonde = false;
 
 // Inzoomen: zo vaak gebeurt het, en hoe ver
 const ZOOM_KANS = 0.4;     // 40% van de vragen
@@ -1251,6 +2031,9 @@ function startKaartQuiz(categorie = "provincies") {
     kaartVraagNummer = 0;
     kaartGoed = 0;
     kaartFout = 0;
+    kaartFouteVragen = [];
+    kaartHerhaalRonde = false;
+    resetReeks();
     document.getElementById("kaartMarkering").style.display = "block";
     document.getElementById("kaartFeedback").textContent = "";
     document.getElementById("kaartAntwoorden").innerHTML = "";
@@ -1281,6 +2064,9 @@ function wisselKaartCategorie() {
     kaartVraagNummer = 0;
     kaartGoed = 0;
     kaartFout = 0;
+    kaartFouteVragen = [];
+    kaartHerhaalRonde = false;
+    resetReeks();
 
     actieveKaartVragen = shuffle(
         kaartVragen[kaartCategorie]
@@ -1289,6 +2075,7 @@ function wisselKaartCategorie() {
     document.getElementById("kaartGoed").textContent = "0";
     document.getElementById("kaartFout").textContent = "0";
     document.getElementById("kaartFeedback").textContent = "";
+    document.getElementById("kaartMarkering").style.display = "block";
 
     werkKaartTekstenBij();
     nieuweKaartVraag();
@@ -1302,9 +2089,10 @@ function werkKaartTekstenBij() {
         document.getElementById("wisselKaartVragen");
 
     document.getElementById("kaartTitel").textContent =
-        kaartAfbeeldingen[kaartCategorie] === KAART_TOETS
+        (kaartAfbeeldingen[kaartCategorie] === KAART_TOETS
             ? "🗺️ Streken en wateren"
-            : "🗺️ Kaart van Nederland";
+            : "🗺️ Kaart van Nederland") +
+        (kaartHerhaalRonde ? " – 🔁 foutjes" : "");
 
     instructie.textContent = kaartTeksten[kaartCategorie];
 
@@ -1432,13 +2220,13 @@ function controleerKaartAntwoord(antwoord, gekozenKnop) {
 }
 
 function verwerkKaartAntwoord(uitslag) {
-    document.getElementById("kaartFeedback").innerHTML =
-        feedbackTekst(uitslag, huidigeKaartVraag.antwoord);
+    const isGoed = teltAlsGoed(uitslag);
 
-    if (teltAlsGoed(uitslag)) {
+    if (isGoed) {
         kaartGoed++;
     } else {
         kaartFout++;
+        kaartFouteVragen.push(huidigeKaartVraag);
     }
 
     document.getElementById("kaartGoed").textContent =
@@ -1447,60 +2235,108 @@ function verwerkKaartAntwoord(uitslag) {
     document.getElementById("kaartFout").textContent =
         kaartFout;
 
+    const reeksMelding = werkReeksBij(isGoed);
+    const tip = uitslag === "fout"
+        ? zoekTip("kaart", kaartCategorie, huidigeKaartVraag)
+        : "";
+
     kaartVraagNummer++;
 
-    kaartTimer = setTimeout(function () {
-        nieuweKaartVraag();
-    }, wachttijd(uitslag));
+    kaartTimer = toonAntwoordFeedback(
+        document.getElementById("kaartFeedback"),
+        uitslag,
+        huidigeKaartVraag.antwoord,
+        tip,
+        reeksMelding,
+        nieuweKaartVraag
+    );
 }
 
 function toonKaartEindscore() {
- 
-const percentage =
-Math.round(
-(kaartGoed / actieveKaartVragen.length) * 100
-);
- 
-if (percentage >= 90) {
-vuurwerk();
+    const totaal = actieveKaartVragen.length;
+    const antwoordenElement = document.getElementById("kaartAntwoorden");
+    const feedbackElement = document.getElementById("kaartFeedback");
+
+    zetKaartZoom(50, 50, 1);
+    document.getElementById("kaartMarkering").style.display = "none";
+
+    // Einde van een foutjes-ronde
+    if (kaartHerhaalRonde) {
+        if (kaartFouteVragen.length === 0) {
+            feedbackElement.innerHTML =
+                "🎉 Alle foutjes verbeterd!<br>Super Eefje! Nu ken je ze allemaal.";
+            vuurwerk();
+            speelGeluid("klaar");
+        } else {
+            feedbackElement.innerHTML =
+                "Bijna! Nog <strong>" + kaartFouteVragen.length + "</strong> " +
+                (kaartFouteVragen.length === 1 ? "foutje" : "foutjes") +
+                " over. Nog één rondje?";
+        }
+
+        antwoordenElement.innerHTML = eindKnoppen(
+            kaartFouteVragen.length, "startKaartHerhaalRonde", "herstartKaartQuiz", "Alles opnieuw oefenen"
+        );
+        return;
+    }
+
+    const percentage = Math.round((kaartGoed / totaal) * 100);
+    const resultaat = registreerResultaat("kaart-" + kaartCategorie, kaartGoed, totaal);
+
+    if (percentage >= 90) {
+        vuurwerk();
+    }
+
+    if (percentage >= 80) speelGeluid("klaar");
+
+    let beoordeling = "";
+
+    if (percentage === 100) {
+        beoordeling = "👑 Fantastisch Eefje! Alles goed!";
+    } else if (percentage >= 90) {
+        beoordeling = "🌟 Super gedaan!";
+    } else if (percentage >= 75) {
+        beoordeling = "👍 Heel goed!";
+    } else {
+        beoordeling = "🗺️ Goed geoefend!";
+    }
+
+    antwoordenElement.innerHTML = eindKnoppen(
+        kaartFouteVragen.length, "startKaartHerhaalRonde", "herstartKaartQuiz", "Opnieuw oefenen"
+    );
+
+    feedbackElement.innerHTML =
+        beoordeling +
+        "<br>Je had <strong>" + kaartGoed + " van de " + totaal +
+        "</strong> vragen goed." +
+        resultaatHtml(resultaat);
 }
 
-zetKaartZoom(50, 50, 1);
- 
-document.getElementById("kaartMarkering").style.display =
-"none";
- 
-document.getElementById("kaartAntwoorden").innerHTML =
-"<button type='button' onclick='herstartKaartQuiz()'>" +
-"Opnieuw oefenen" +
-"</button>";
- 
-let beoordeling = "";
- 
-if (percentage === 100) {
-beoordeling = "👑 Fantastisch Eefje! Alles goed!";
-} else if (percentage >= 90) {
-beoordeling = "🥇 Super gedaan!";
-} else if (percentage >= 75) {
-beoordeling = "🥈 Heel goed!";
-} else {
-beoordeling = "🗺️ Goed geoefend!";
-}
- 
-document.getElementById("kaartFeedback").innerHTML =
-beoordeling +
-"<br><br>" +
-"Je had <strong>" +
-kaartGoed +
-" van de " +
-actieveKaartVragen.length +
-"</strong> vragen goed.";
+// Alleen de plekken die fout gingen nog een keer
+function startKaartHerhaalRonde() {
+    actieveKaartVragen = shuffle(kaartFouteVragen);
+    kaartFouteVragen = [];
+    kaartHerhaalRonde = true;
+    kaartVraagNummer = 0;
+    kaartGoed = 0;
+    kaartFout = 0;
+
+    document.getElementById("kaartMarkering").style.display = "block";
+    document.getElementById("kaartGoed").textContent = "0";
+    document.getElementById("kaartFout").textContent = "0";
+    document.getElementById("kaartFeedback").textContent = "";
+
+    werkKaartTekstenBij();
+    nieuweKaartVraag();
 }
 
 function herstartKaartQuiz() {
     kaartVraagNummer = 0;
     kaartGoed = 0;
     kaartFout = 0;
+    kaartFouteVragen = [];
+    kaartHerhaalRonde = false;
+    resetReeks();
 
     actieveKaartVragen = shuffle(
         kaartVragen[kaartCategorie]
@@ -1513,6 +2349,7 @@ function herstartKaartQuiz() {
     document.getElementById("kaartFout").textContent = "0";
     document.getElementById("kaartFeedback").textContent = "";
 
+    werkKaartTekstenBij();
     nieuweKaartVraag();
 }
 
@@ -1539,6 +2376,17 @@ document.getElementById("kaartAntwoorden").innerHTML = "";
 
 document.getElementById("nederlandKaart")
     .addEventListener("load", zetKaartVerhouding);
+
+// Geluid aan of uit onthouden
+try {
+    geluidAan = localStorage.getItem("geluidAan") !== "nee";
+} catch (e) {
+    geluidAan = true;
+}
+werkGeluidKnopBij();
+
+// Sterren en medailles in het menu tonen
+werkMenuBij();
 
 // Laatst gekozen manier van antwoorden onthouden
 (function () {
