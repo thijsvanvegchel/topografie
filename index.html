@@ -185,6 +185,58 @@ button:hover {
     );
 }
 
+.modus-keuze {
+    display: flex;
+    gap: 8px;
+    margin: 10px 0 25px;
+}
+
+.modus-keuze button {
+    margin: 0;
+    padding: 12px 8px;
+    font-size: 1em;
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.modus-keuze button:hover {
+    background: #cbd5e1;
+    box-shadow: none;
+}
+
+.modus-keuze button.actief {
+    background: linear-gradient(135deg, #001f4d, #0055cc);
+    color: white;
+}
+
+.schrijfveld {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 10px 0;
+    padding: 15px;
+    font-size: 1.3em;
+    text-align: center;
+    border: 3px solid #cbd5e1;
+    border-radius: 8px;
+    color: #001f4d;
+    outline: none;
+}
+
+.schrijfveld:focus {
+    border-color: #ff8c00;
+}
+
+.schrijfveld.correct {
+    border-color: #28a745;
+    background: #e9f7ec !important;
+}
+
+.schrijfveld.incorrect {
+    border-color: #dc3545;
+    background: #fdecee !important;
+}
+
 .menu-kop {
     color: #001f4d;
     margin: 35px 0 10px;
@@ -216,6 +268,20 @@ button:hover {
 <div id="menu" class="quiz-box">
 
     <h1>🇳🇱 Eefjes Topografie</h1>
+
+    <p>Hoe wil je antwoorden?</p>
+
+    <div class="modus-keuze">
+        <button type="button" data-modus="kiezen" onclick="kiesModus('kiezen')">
+            🔘 Kiezen
+        </button>
+        <button type="button" data-modus="schrijven" onclick="kiesModus('schrijven')">
+            ✏️ Zelf schrijven
+        </button>
+        <button type="button" data-modus="afwisselend" onclick="kiesModus('afwisselend')">
+            🔀 Afwisselend
+        </button>
+    </div>
 
     <p>Kies een onderdeel:</p>
 
@@ -332,6 +398,163 @@ button:hover {
     
 <script>
  
+// ===== Antwoorden: kiezen of zelf schrijven =====
+
+// "kiezen", "schrijven" of "afwisselend"
+let antwoordModus = "kiezen";
+
+// Telt een antwoord met één klein tikfoutje als goed?
+// false = nee: Eefje ziet dan "Bijna!" en het telt als fout.
+const BIJNA_TELT_ALS_GOED = false;
+
+// Andere schrijfwijzen die ook goed zijn
+const andereSchrijfwijzen = {
+    "'s-Hertogenbosch": ["Den Bosch"],
+    "Den Haag": ["'s-Gravenhage"],
+    "Biesbosch": ["Biesbos"],
+    "Friesland": ["Fryslân"],
+    "Rijn": ["Boven-Rijn"]
+};
+
+function kiesModus(modus) {
+    antwoordModus = modus;
+
+    document.querySelectorAll(".modus-keuze button").forEach(knop => {
+        knop.classList.toggle("actief", knop.dataset.modus === modus);
+    });
+
+    try {
+        localStorage.setItem("antwoordModus", modus);
+    } catch (e) {
+        // geen opslag beschikbaar: niet erg
+    }
+}
+
+function isSchrijfVraag() {
+    if (antwoordModus === "schrijven") return true;
+    if (antwoordModus === "afwisselend") return Math.random() < 0.5;
+    return false;
+}
+
+// Hoofdletters, spaties, streepjes, accenten en "de/het" tellen niet mee
+function normaliseer(tekst) {
+    return tekst
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .replace(/^(de|het)\s+/, "")
+        .replace(/[\s\-'’.]/g, "");
+}
+
+function afstand(a, b) {
+    const rij = Array.from({ length: b.length + 1 }, (_, i) => i);
+
+    for (let i = 1; i <= a.length; i++) {
+        let vorige = rij[0];
+        rij[0] = i;
+
+        for (let j = 1; j <= b.length; j++) {
+            const tijdelijk = rij[j];
+            rij[j] = Math.min(
+                rij[j] + 1,
+                rij[j - 1] + 1,
+                vorige + (a[i - 1] === b[j - 1] ? 0 : 1)
+            );
+            vorige = tijdelijk;
+        }
+    }
+
+    return rij[b.length];
+}
+
+// Geeft "goed", "bijna" of "fout"
+function beoordeelGeschreven(invoer, juist) {
+    const getypt = normaliseer(invoer);
+    const goedeVormen = [juist, ...(andereSchrijfwijzen[juist] || [])]
+        .map(normaliseer);
+
+    if (getypt === "") return "fout";
+    if (goedeVormen.includes(getypt)) return "goed";
+
+    const kleinsteAfstand = Math.min(
+        ...goedeVormen.map(vorm => afstand(getypt, vorm))
+    );
+
+    // Eén foutje mag "bijna" heten, bij lange woorden twee
+    const marge = juist.length >= 9 ? 2 : 1;
+
+    return kleinsteAfstand <= marge ? "bijna" : "fout";
+}
+
+// Maakt een tekstvak met een knop "Controleer"
+function maakSchrijfveld(container, juist, klaar) {
+    container.innerHTML = "";
+
+    const veld = document.createElement("input");
+    veld.type = "text";
+    veld.className = "schrijfveld";
+    veld.placeholder = "Typ hier je antwoord";
+    veld.autocomplete = "off";
+    veld.autocapitalize = "words";
+    veld.spellcheck = false;
+
+    const knop = document.createElement("button");
+    knop.type = "button";
+    knop.textContent = "Controleer";
+
+    function controleer() {
+        if (veld.disabled) return;
+
+        if (veld.value.trim() === "") {
+            veld.focus();
+            return;
+        }
+
+        const uitslag = beoordeelGeschreven(veld.value, juist);
+
+        veld.disabled = true;
+        knop.disabled = true;
+        veld.classList.add(uitslag === "goed" ? "correct" : "incorrect");
+
+        klaar(uitslag);
+    }
+
+    knop.addEventListener("click", controleer);
+    veld.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") controleer();
+    });
+
+    container.appendChild(veld);
+    container.appendChild(knop);
+
+    veld.focus();
+}
+
+function feedbackTekst(uitslag, juist) {
+    if (uitslag === "goed") {
+        return "✅ Goed!";
+    }
+
+    if (uitslag === "bijna") {
+        return BIJNA_TELT_ALS_GOED
+            ? "✅ Goed! Let wel op de spelling: <strong>" + juist + "</strong>"
+            : "✏️ Bijna! Let op de spelling: <strong>" + juist + "</strong>";
+    }
+
+    return "❌ Fout. Het juiste antwoord is: <strong>" + juist + "</strong>";
+}
+
+function teltAlsGoed(uitslag) {
+    return uitslag === "goed" ||
+        (uitslag === "bijna" && BIJNA_TELT_ALS_GOED);
+}
+
+// Na een fout iets langer de tijd om het goede antwoord te lezen
+function wachttijd(uitslag) {
+    return uitslag === "goed" ? 1800 : 3000;
+}
+
 const quizzes = {
     provincies: {
         titel: "Provincies & Hoofdsteden",
@@ -502,6 +725,15 @@ function nieuweVraag() {
         "</small>" +
         huidigeVraag.vraag;
 
+    if (isSchrijfVraag()) {
+        maakSchrijfveld(
+            antwoordenElement,
+            huidigeVraag.antwoord,
+            verwerkAntwoord
+        );
+        return;
+    }
+
     const alleAntwoorden = [
         ...new Set(
             huidigeCategorie.vragen.map(item => item.antwoord)
@@ -550,18 +782,19 @@ function controleerAntwoord(gekozenAntwoord, gekozenKnop) {
         }
     });
 
-    if (gekozenAntwoord === huidigeVraag.antwoord) {
-        gekozenKnop.classList.add("correct");
-        document.getElementById("feedback").textContent = "✅ Goed!";
+    const isGoed = gekozenAntwoord === huidigeVraag.antwoord;
+    gekozenKnop.classList.add(isGoed ? "correct" : "incorrect");
+
+    verwerkAntwoord(isGoed ? "goed" : "fout");
+}
+
+function verwerkAntwoord(uitslag) {
+    document.getElementById("feedback").innerHTML =
+        feedbackTekst(uitslag, huidigeVraag.antwoord);
+
+    if (teltAlsGoed(uitslag)) {
         goed++;
     } else {
-        gekozenKnop.classList.add("incorrect");
-
-        document.getElementById("feedback").innerHTML =
-            "❌ Fout. Het juiste antwoord is: <strong>" +
-            huidigeVraag.antwoord +
-            "</strong>";
-
         fout++;
     }
 
@@ -572,7 +805,7 @@ function controleerAntwoord(gekozenAntwoord, gekozenKnop) {
 
     volgendeVraagTimer = setTimeout(function () {
         nieuweVraag();
-    }, 1800);
+    }, wachttijd(uitslag));
 }
 
 function toonEindscore() {
@@ -908,6 +1141,15 @@ function maakKaartAntwoorden() {
     const antwoordenElement =
         document.getElementById("kaartAntwoorden");
 
+    if (isSchrijfVraag()) {
+        maakSchrijfveld(
+            antwoordenElement,
+            huidigeKaartVraag.antwoord,
+            verwerkKaartAntwoord
+        );
+        return;
+    }
+
     const alleAntwoorden = [
         ...new Set(
             kaartVragen[
@@ -959,21 +1201,19 @@ function controleerKaartAntwoord(antwoord, gekozenKnop) {
         }
     });
 
-    if (antwoord === huidigeKaartVraag.antwoord) {
-        gekozenKnop.classList.add("correct");
+    const isGoed = antwoord === huidigeKaartVraag.antwoord;
+    gekozenKnop.classList.add(isGoed ? "correct" : "incorrect");
 
-        document.getElementById("kaartFeedback").textContent =
-            "✅ Goed!";
+    verwerkKaartAntwoord(isGoed ? "goed" : "fout");
+}
 
+function verwerkKaartAntwoord(uitslag) {
+    document.getElementById("kaartFeedback").innerHTML =
+        feedbackTekst(uitslag, huidigeKaartVraag.antwoord);
+
+    if (teltAlsGoed(uitslag)) {
         kaartGoed++;
     } else {
-        gekozenKnop.classList.add("incorrect");
-
-        document.getElementById("kaartFeedback").innerHTML =
-            "❌ Fout. Het juiste antwoord is: <strong>" +
-            huidigeKaartVraag.antwoord +
-            "</strong>";
-
         kaartFout++;
     }
 
@@ -987,7 +1227,7 @@ function controleerKaartAntwoord(antwoord, gekozenKnop) {
 
     kaartTimer = setTimeout(function () {
         nieuweKaartVraag();
-    }, 1800);
+    }, wachttijd(uitslag));
 }
 
 function toonKaartEindscore() {
@@ -1072,6 +1312,23 @@ document.getElementById("kaartFeedback").textContent = "";
 document.getElementById("kaartAntwoorden").innerHTML = "";
     
 }
+
+// Laatst gekozen manier van antwoorden onthouden
+(function () {
+    let opgeslagen = null;
+
+    try {
+        opgeslagen = localStorage.getItem("antwoordModus");
+    } catch (e) {
+        // geen opslag beschikbaar
+    }
+
+    kiesModus(
+        ["kiezen", "schrijven", "afwisselend"].includes(opgeslagen)
+            ? opgeslagen
+            : "kiezen"
+    );
+})();
 </script>
 </body>
 </html>
