@@ -260,6 +260,206 @@ button:hover {
         border-width: 3px;
     }
 }
+
+/* ===== Passend op telefoon en tablet ===== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 20px;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.quiz-box {
+    margin-top: 0;
+    padding: 28px;
+}
+
+h1 {
+    margin: 0 0 10px;
+    font-size: 1.8em;
+}
+
+/* De kaart is nooit hoger dan ongeveer de helft van het scherm.
+   --ratio (breedte / hoogte van de kaart) wordt door de code gezet. */
+#kaartContainer {
+    width: min(100%, 560px, calc(55vh * var(--ratio, 0.9)));
+    width: min(100%, 560px, calc(55dvh * var(--ratio, 0.9)));
+    margin: 12px auto;
+    border-radius: 14px;
+}
+
+#kaartInstructie {
+    margin: 0 0 6px;
+    font-weight: 600;
+}
+
+/* Meerkeuze: twee knoppen naast elkaar */
+#answers,
+#kaartAntwoorden {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+#answers button,
+#kaartAntwoorden button {
+    margin: 0;
+    padding: 14px 8px;
+    min-height: 52px;
+    font-size: 1.05em;
+    line-height: 1.2;
+}
+
+/* Schrijfvak, Controleer en Opnieuw: over de hele breedte */
+#answers .schrijfveld,
+#kaartAntwoorden .schrijfveld,
+#answers .schrijfveld + button,
+#kaartAntwoorden .schrijfveld + button,
+#answers button:only-child,
+#kaartAntwoorden button:only-child {
+    grid-column: 1 / -1;
+    margin: 0;
+}
+
+.schrijfveld {
+    font-size: 1.25em;
+    padding: 12px;
+}
+
+#feedback,
+#kaartFeedback {
+    min-height: 1.6em;
+    margin: 12px 0;
+    font-size: 1.15em;
+}
+
+#score,
+#kaartScore {
+    margin: 10px 0;
+    font-size: 1em;
+    color: #475569;
+}
+
+.province {
+    font-size: 1.8em;
+    margin: 12px 0;
+}
+
+/* Telefoon */
+@media (max-width: 600px) {
+    body {
+        padding: 8px;
+    }
+
+    .quiz-box {
+        padding: 14px;
+        border-radius: 18px;
+    }
+
+    h1 {
+        font-size: 1.35em;
+    }
+
+    #menu h1 {
+        font-size: 1.6em;
+    }
+
+    #kaartContainer {
+        width: min(100%, calc(50vh * var(--ratio, 0.9)));
+        width: min(100%, calc(50dvh * var(--ratio, 0.9)));
+        margin: 8px auto;
+    }
+
+    #kaartMarkering {
+        width: 22px;
+        height: 22px;
+        border-width: 3px;
+    }
+
+    #answers button,
+    #kaartAntwoorden button {
+        font-size: 0.95em;
+        padding: 10px 6px;
+        min-height: 46px;
+    }
+
+    .menu-kop {
+        margin-top: 20px;
+        padding-top: 15px;
+    }
+
+    #menu > button {
+        padding: 12px;
+        margin: 8px 0;
+    }
+
+    .modus-keuze button {
+        font-size: 0.85em;
+        padding: 10px 4px;
+    }
+
+    .province {
+        font-size: 1.5em;
+    }
+
+    button {
+        padding: 12px;
+        margin: 8px 0;
+    }
+}
+
+/* Tablet of laptop liggend: kaart links, vragen rechts */
+@media (min-width: 800px) and (orientation: landscape) {
+    body {
+        max-width: 1200px;
+    }
+
+    #kaartQuiz {
+        grid-template-columns: auto minmax(280px, 1fr);
+        grid-template-rows: auto auto auto auto auto auto 1fr;
+        column-gap: 30px;
+        align-items: start;
+        text-align: center;
+    }
+
+    /* De code zet display:block; liggend maken we er een raster van */
+    #kaartQuiz[style*="block"] {
+        display: grid !important;
+    }
+
+    #kaartQuiz > h1 {
+        grid-column: 1 / -1;
+    }
+
+    #kaartContainer {
+        grid-column: 1;
+        grid-row: 2 / span 6;
+        width: min(60vw, calc((100vh - 160px) * var(--ratio, 0.9)));
+        width: min(60vw, calc((100dvh - 160px) * var(--ratio, 0.9)));
+        margin: 0;
+    }
+
+    #kaartQuiz > :not(h1):not(#kaartContainer) {
+        grid-column: 2;
+    }
+
+    #kaartInstructie {
+        margin-top: 10px;
+    }
+
+    #kaartAntwoorden {
+        grid-template-columns: 1fr;
+    }
+
+    #kaartQuiz > button {
+        margin: 6px 0;
+    }
+}
 </style>
 
 </head>
@@ -967,6 +1167,28 @@ const kaartAfbeeldingen = {
     toets: KAART_TOETS
 };
 
+// Breedte gedeeld door hoogte van elke kaart (voor de schermindeling)
+const kaartVerhoudingen = {
+    [KAART_PROVINCIES]: 1676 / 1853,
+    [KAART_TOETS]: 1080 / 1280
+};
+
+function zetKaartVerhouding() {
+    const kaart = document.getElementById("nederlandKaart");
+    const naam = kaart.getAttribute("src");
+
+    let verhouding = kaartVerhoudingen[naam];
+
+    if (!verhouding && kaart.naturalWidth) {
+        verhouding = kaart.naturalWidth / kaart.naturalHeight;
+    }
+
+    if (verhouding) {
+        document.getElementById("kaartContainer")
+            .style.setProperty("--ratio", verhouding);
+    }
+}
+
 const kaartTeksten = {
     provincies: "Welke provincie wordt aangegeven?",
     steden: "Welke stad wordt aangegeven?",
@@ -1092,6 +1314,8 @@ function werkKaartTekstenBij() {
     if (!kaart.src.endsWith(nieuweKaart)) {
         kaart.src = nieuweKaart;
     }
+
+    zetKaartVerhouding();
 
     // De wisselknop hoort alleen bij provincies en steden
     const isProvOfStad =
@@ -1312,6 +1536,9 @@ document.getElementById("kaartFeedback").textContent = "";
 document.getElementById("kaartAntwoorden").innerHTML = "";
     
 }
+
+document.getElementById("nederlandKaart")
+    .addEventListener("load", zetKaartVerhouding);
 
 // Laatst gekozen manier van antwoorden onthouden
 (function () {
