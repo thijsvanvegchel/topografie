@@ -106,6 +106,21 @@ button:hover {
     display: block;
     width: 100%;
     height: auto;
+    transform-origin: 0 0;
+    transition: transform 0.7s ease;
+}
+
+#zoomLabel {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(0, 31, 77, 0.8);
+    color: white;
+    font-size: 0.9em;
+    display: none;
+    pointer-events: none;
 }
 
 #kaartMarkering {
@@ -120,6 +135,7 @@ button:hover {
         0 0 0 5px rgba(255, 107, 0, 0.4),
         0 4px 12px rgba(0, 0, 0, 0.5);
     animation: kaartPuls 1.2s infinite;
+    transition: left 0.7s ease, top 0.7s ease;
     pointer-events: none;
 }
 
@@ -169,6 +185,14 @@ button:hover {
     );
 }
 
+.menu-kop {
+    color: #001f4d;
+    margin: 35px 0 10px;
+    padding-top: 25px;
+    border-top: 2px solid #e2e8f0;
+    font-size: 1.3em;
+}
+
 @media (max-width: 600px) {
     body {
         padding: 15px;
@@ -215,6 +239,24 @@ button:hover {
         Grote Rivieren
     </button>
 
+    <h2 class="menu-kop">📝 Toets: Streken en wateren</h2>
+
+    <button onclick="startKaartQuiz('wateren')">
+        Wateren
+    </button>
+
+    <button onclick="startKaartQuiz('eilanden')">
+        Waddeneilanden
+    </button>
+
+    <button onclick="startKaartQuiz('streken')">
+        Streken
+    </button>
+
+    <button onclick="startKaartQuiz('toets')">
+        ⭐ Hele toets oefenen
+    </button>
+
 </div>
 
 <div id="quiz" class="quiz-box" style="display:none;">
@@ -257,6 +299,7 @@ button:hover {
         >
 
         <div id="kaartMarkering"></div>
+        <div id="zoomLabel">🔍 Ingezoomd</div>
     </div>
 
     <div id="kaartAntwoorden"></div>
@@ -626,7 +669,65 @@ function terugNaarMenu() {
         { antwoord: "Middelburg", x: 11, y: 76 },
         { antwoord: "Eindhoven", x: 54, y: 79 },
         { antwoord: "Maastricht", x: 61, y: 95 }
+    ],
+
+    // Toets "Streken en wateren"
+    wateren: [
+        { antwoord: "Noordzee", x: 17.9, y: 32.4 },
+        { antwoord: "Waddenzee", x: 46.5, y: 17.3 },
+        { antwoord: "Afsluitdijk", x: 46.5, y: 24.3 },
+        { antwoord: "IJsselmeer", x: 47.7, y: 30.2 },
+        { antwoord: "Markermeer", x: 46.5, y: 39.9 },
+        { antwoord: "Rijn", x: 71.6, y: 62.1 },
+        { antwoord: "IJssel", x: 67.4, y: 47.5 },
+        { antwoord: "Nederrijn", x: 57.3, y: 59.9 },
+        { antwoord: "Lek", x: 43.0, y: 62.1 },
+        { antwoord: "Nieuwe Waterweg", x: 23.9, y: 60.7 },
+        { antwoord: "Maas", x: 65.0, y: 78.3 },
+        { antwoord: "Waal", x: 58.5, y: 64.2 },
+        { antwoord: "Amsterdam-Rijnkanaal", x: 43.0, y: 51.3 },
+        { antwoord: "Noordzeekanaal", x: 36.4, y: 45.3 },
+        { antwoord: "Oosterschelde", x: 14.9, y: 72.0 },
+        { antwoord: "Westerschelde", x: 15.5, y: 79.1 }
+    ],
+
+    eilanden: [
+        { antwoord: "Texel", x: 36.7, y: 20.5 },
+        { antwoord: "Vlieland", x: 40.6, y: 14.3 },
+        { antwoord: "Terschelling", x: 49.5, y: 9.4 },
+        { antwoord: "Ameland", x: 59.1, y: 7.6 },
+        { antwoord: "Schiermonnikoog", x: 70.4, y: 5.9 }
+    ],
+
+    streken: [
+        { antwoord: "Twente", x: 82.3, y: 47.5 },
+        { antwoord: "Veluwe", x: 59.7, y: 51.3 },
+        { antwoord: "Haarlemmermeer", x: 36.4, y: 49.6 },
+        { antwoord: "Rijnmond", x: 29.8, y: 62.1 },
+        { antwoord: "Randstad", x: 28.0, y: 54.5 },
+        { antwoord: "Biesbosch", x: 39.4, y: 66.6 },
+        { antwoord: "Zeeuws-Vlaanderen", x: 14.9, y: 82.0 },
+        { antwoord: "Noordoostpolder", x: 59.7, y: 33.5 },
+        { antwoord: "Achterhoek", x: 77.6, y: 57.2 },
+        { antwoord: "West-Friesland", x: 43.0, y: 34.5 },
+        { antwoord: "Duitsland", x: 87.1, y: 74.5 },
+        { antwoord: "België", x: 26.3, y: 91.2 }
     ]
+};
+
+// De hele toets: alle wateren, eilanden en streken door elkaar.
+// "soort" zorgt dat de foute antwoorden uit dezelfde groep komen.
+kaartVragen.toets = ["wateren", "eilanden", "streken"].flatMap(
+    soort => kaartVragen[soort].map(vraag => ({ ...vraag, soort }))
+);
+
+const kaartTeksten = {
+    provincies: "Welke provincie wordt aangegeven?",
+    steden: "Welke stad wordt aangegeven?",
+    wateren: "Welk water (of welke dijk) wordt aangegeven?",
+    eilanden: "Welk Waddeneiland wordt aangegeven? Tip: onthoud TV-TAS!",
+    streken: "Welke streek of welk land wordt aangegeven?",
+    toets: "Wat wordt er aangegeven?"
 };
 
 let kaartCategorie = "provincies";
@@ -637,7 +738,39 @@ let kaartGoed = 0;
 let kaartFout = 0;
 let kaartTimer = null;
 
-function startKaartQuiz() {
+// Inzoomen: zo vaak gebeurt het, en hoe ver
+const ZOOM_KANS = 0.4;     // 40% van de vragen
+const ZOOM_FACTOR = 2.2;   // 2,2 keer zo groot
+
+// Zoomt de kaart in op punt (x, y) in procenten.
+// zoom = 1 betekent: hele kaart.
+function zetKaartZoom(x, y, zoom) {
+    const kaart = document.getElementById("nederlandKaart");
+    const markering = document.getElementById("kaartMarkering");
+    const label = document.getElementById("zoomLabel");
+
+    const venster = 100 / zoom;   // hoeveel % van de kaart zichtbaar is
+
+    // Niet precies in het midden, anders verraadt het midden de plek
+    const schuif = (Math.random() - 0.5) * venster * 0.4;
+    const schuifY = (Math.random() - 0.5) * venster * 0.4;
+
+    const begrens = (waarde) =>
+        Math.min(Math.max(waarde, 0), 100 - venster);
+
+    const links = zoom === 1 ? 0 : begrens(x - venster / 2 + schuif);
+    const boven = zoom === 1 ? 0 : begrens(y - venster / 2 + schuifY);
+
+    kaart.style.transform =
+        "scale(" + zoom + ") translate(" + (-links) + "%, " + (-boven) + "%)";
+
+    markering.style.left = (x - links) * zoom + "%";
+    markering.style.top = (y - boven) * zoom + "%";
+
+    label.style.display = zoom === 1 ? "none" : "block";
+}
+
+function startKaartQuiz(categorie = "provincies") {
     if (kaartTimer) {
         clearTimeout(kaartTimer);
     }
@@ -646,7 +779,7 @@ function startKaartQuiz() {
     document.getElementById("quiz").style.display = "none";
     document.getElementById("kaartQuiz").style.display = "block";
 
-    kaartCategorie = "provincies";
+    kaartCategorie = categorie;
     kaartVraagNummer = 0;
     kaartGoed = 0;
     kaartFout = 0;
@@ -700,19 +833,19 @@ function werkKaartTekstenBij() {
     const wisselknop =
         document.getElementById("wisselKaartVragen");
 
-    if (kaartCategorie === "provincies") {
-        instructie.textContent =
-            "Welke provincie wordt aangegeven?";
+    instructie.textContent = kaartTeksten[kaartCategorie];
 
-        wisselknop.textContent =
-            "Nu steden oefenen";
-    } else {
-        instructie.textContent =
-            "Welke stad wordt aangegeven?";
+    // De wisselknop hoort alleen bij provincies en steden
+    const isProvOfStad =
+        kaartCategorie === "provincies" ||
+        kaartCategorie === "steden";
 
-        wisselknop.textContent =
-            "Nu provincies oefenen";
-    }
+    wisselknop.style.display = isProvOfStad ? "block" : "none";
+
+    wisselknop.textContent =
+        kaartCategorie === "provincies"
+            ? "Nu steden oefenen"
+            : "Nu provincies oefenen";
 }
 
 function nieuweKaartVraag() {
@@ -735,8 +868,13 @@ function nieuweKaartVraag() {
     const markering =
         document.getElementById("kaartMarkering");
 
-    markering.style.left = huidigeKaartVraag.x + "%";
-    markering.style.top = huidigeKaartVraag.y + "%";
+    const inzoomen = Math.random() < ZOOM_KANS;
+
+    zetKaartZoom(
+        huidigeKaartVraag.x,
+        huidigeKaartVraag.y,
+        inzoomen ? ZOOM_FACTOR : 1
+    );
 
     maakKaartAntwoorden();
 }
@@ -747,7 +885,9 @@ function maakKaartAntwoorden() {
 
     const alleAntwoorden = [
         ...new Set(
-            kaartVragen[kaartCategorie].map(
+            kaartVragen[
+                huidigeKaartVraag.soort || kaartCategorie
+            ].map(
                 vraag => vraag.antwoord
             )
         )
@@ -835,6 +975,8 @@ Math.round(
 if (percentage >= 90) {
 vuurwerk();
 }
+
+zetKaartZoom(50, 50, 1);
  
 document.getElementById("kaartMarkering").style.display =
 "none";
@@ -893,6 +1035,8 @@ function terugNaarMenuVanKaart() {
 
     document.getElementById("kaartQuiz").style.display =
         "none";
+
+    zetKaartZoom(50, 50, 1);
 
     document.getElementById("menu").style.display =
         "block";
